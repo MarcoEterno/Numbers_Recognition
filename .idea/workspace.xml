@@ -4,14 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca9d787e-50a8-41bd-a469-93cec8b9143a" name="Changes" comment="model is trained for 15 epochs and saved. functions are well separated, but not inn different files">
-      <change afterPath="$PROJECT_DIR$/source/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/source/data_loader.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/source/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/source/train.py" afterDir="false" />
+    <list default="true" id="ca9d787e-50a8-41bd-a469-93cec8b9143a" name="Changes" comment="model trains well, file are separated, but documentation is not complete">
+      <change afterPath="$PROJECT_DIR$/source/inference.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/plot_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/data_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/data_loader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/source/image_classifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/image_classifier.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/model_state_15.pt" beforeDir="false" afterPath="$PROJECT_DIR$/source/model_state_15.pt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/runs/Dec07_18-40-42_192.168.1.2/events.out.tfevents.1701970842.192.168.1.2.20960.0" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/model_state.pt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/model_state_15.pt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/train.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,6 +84,29 @@
     </key>
   </component>
   <component name="RunManager" selected="Python.main">
+    <configuration name="data_loader" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Image_recognition" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/source" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/source/data_loader.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="image_classifier" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Image_recognition" />
       <option name="ENV_FILES" value="" />
@@ -165,12 +189,14 @@
     </configuration>
     <list>
       <item itemvalue="Python.python" />
+      <item itemvalue="Python.data_loader" />
       <item itemvalue="Python.main" />
       <item itemvalue="Python.image_classifier" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.data_loader" />
         <item itemvalue="Python.image_classifier" />
       </list>
     </recent_temporary>
@@ -194,7 +220,7 @@
       <workItem from="1701961254147" duration="112000" />
       <workItem from="1701961401606" duration="446000" />
       <workItem from="1701962434804" duration="23799000" />
-      <workItem from="1702053279346" duration="1585000" />
+      <workItem from="1702053279346" duration="21049000" />
     </task>
     <task id="LOCAL-00001" summary="model is trained for 15 epochs and saved. functions are well separated, but not inn different files">
       <option name="closed" value="true" />
@@ -204,21 +230,49 @@
       <option name="project" value="LOCAL" />
       <updated>1701971214427</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="model trains well, file are separated, but documentation is not complete">
+      <option name="closed" value="true" />
+      <created>1702054937379</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1702054937379</updated>
+    </task>
+    <task id="LOCAL-00003" summary="model trains well, file are separated, but documentation is not complete">
+      <option name="closed" value="true" />
+      <created>1702054956245</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1702054956245</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="model is trained for 15 epochs and saved. functions are well separated, but not inn different files" />
-    <option name="LAST_COMMIT_MESSAGE" value="model is trained for 15 epochs and saved. functions are well separated, but not inn different files" />
+    <MESSAGE value="model trains well, file are separated, but documentation is not complete" />
+    <option name="LAST_COMMIT_MESSAGE" value="model trains well, file are separated, but documentation is not complete" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Image_recognition$python.coverage" NAME="python Coverage Results" MODIFIED="1702053354891" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/mambaforge/envs/torch_pendulum/bin" />
     <SUITE FILE_PATH="coverage/Image_recognition$image_classifier.coverage" NAME="image_classifier Coverage Results" MODIFIED="1702054068227" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/source" />
-    <SUITE FILE_PATH="coverage/Image_recognition$main.coverage" NAME="main Coverage Results" MODIFIED="1702054339770" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/source" />
-    <SUITE FILE_PATH="coverage/Image_recognition$data_loader.coverage" NAME="data_loader Coverage Results" MODIFIED="1701998154966" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/source" />
+    <SUITE FILE_PATH="coverage/Image_recognition$main.coverage" NAME="main Coverage Results" MODIFIED="1702161799498" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/source" />
+    <SUITE FILE_PATH="coverage/Image_recognition$data_loader.coverage" NAME="data_loader Coverage Results" MODIFIED="1702157565818" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/source" />
     <SUITE FILE_PATH="coverage/Image_recognition$train.coverage" NAME="train Coverage Results" MODIFIED="1701996708738" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/source" />
   </component>
 </project>

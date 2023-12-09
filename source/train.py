@@ -16,7 +16,7 @@ def load_model(clf: ImageClassifier, start_epoch=0, checkpoints_dir="checkpoints
     :return:
     """
     if not os.path.exists(checkpoints_dir):
-        print(f"checkpoints directory not found, creating it, and starting the training from scratch")
+        print(f"checkpoints directory not found, creating it, and loading the model randomly initialized")
         os.mkdir(checkpoints_dir)
         return clf, 0
     if os.path.exists(checkpoints_dir):
@@ -28,9 +28,10 @@ def load_model(clf: ImageClassifier, start_epoch=0, checkpoints_dir="checkpoints
                 clf.load_state_dict(checkpoint['model_state_dict'])
                 clf.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
                 start_epoch = checkpoint['epoch'] + 1
-                print(f"found available checkpoint: checkpoint_{i - 1}.pt. Resuming training from epoch {start_epoch}")
+                print(f"loading the model from : checkpoint_{i - 1}.pt. "
+                      f"Eventual training would resume  from epoch {start_epoch}")
                 return clf, start_epoch
-        print(f"no checkpoints found, starting training from scratch")
+        print(f"no checkpoints found, loading the model randomly initialized")
         return clf, 0
 
 
@@ -46,11 +47,11 @@ def train_model(clf: ImageClassifier, datasets, start_epoch=0, epochs=10, checkp
     # tensorboard --logdir=logs/fit
 
     for epoch in range(start_epoch, start_epoch + epochs):
-        # used to calculate the accuracy
+        # Used to calculate the accuracy
         total_predictions = 0
         correct_predictions = 0
 
-        # time the training loop
+        # Time the training loop
         start_time = time.perf_counter_ns()
 
         for batch in datasets:
