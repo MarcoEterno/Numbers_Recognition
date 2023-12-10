@@ -1,13 +1,16 @@
 import torch
 
 
-def get_system_device():
+def get_system_device(print_info=False):
     if torch.has_mps:
-        #print(f"Using mps device")
+        if print_info:
+            print(f"Using mps device")
         return 'mps'
     elif torch.cuda.is_available():
-        #print(f"Using cuda device")
+        if print_info:
+            print(f"Using cuda device")
         return 'cuda'
     else:
-        #print(f"Using cpu device")
+        if print_info:
+            print(f"Using cpu device")
         return 'cpu'

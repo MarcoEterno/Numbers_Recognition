@@ -26,10 +26,11 @@ def create_n_digit_dataset(n, train=True, device=get_system_device()):
 
 
 def get_MNIST_couples(train=True, device= get_system_device()):
-    dataset_path = os.path.join(os.getcwd(), 'data','custom','two_digits_dataset.pt')
+    dataset_type= 'train' if train else 'validation'
+    dataset_path = os.path.join(os.getcwd(), 'data','custom',f'two_digits_dataset_{dataset_type }.pt')
     print(dataset_path)
     if os.path.exists(dataset_path):
-        print("loading the two digit dataset")
+        print(f"loading the two digits {dataset_type} dataset")
         two_digits_dataset = DataLoader(torch.load(dataset_path, map_location='cpu'), batch_size=256, shuffle=True)
         return two_digits_dataset
 
@@ -41,7 +42,7 @@ def get_MNIST_couples(train=True, device= get_system_device()):
         download=True,
         transform=ToTensor()
     )
-    print("creating the two digit dataset")
+    print(f"creating the two digits {dataset_type} dataset")
     for idx in range(len(mnist_dataset)):
         # Get two consecutive images (wrapping around at the end)
         img1, label1 = mnist_dataset[idx]
@@ -66,9 +67,9 @@ def get_MNIST_couples(train=True, device= get_system_device()):
         couples.append((combined_img, combined_label))
 
     os.makedirs(os.path.dirname(dataset_path), exist_ok=True)
-    print(f"Two digits dataset created. Saving dataset to {dataset_path}")
+    print(f"Two digits {dataset_type} dataset created. Saving dataset to {dataset_path}")
     torch.save(couples, dataset_path)
-    two_digits_dataset = DataLoader(couples, batch_size=256, shuffle=True)
+    two_digits_dataset = DataLoader(couples, batch_size=64, shuffle=True)
     return two_digits_dataset
 
 
