@@ -11,30 +11,33 @@ from image_classifier import ImageClassifier
 from inference import test_model_performance
 from source.plot_data import plot_dataset
 
-start_epoch = 30 #if set to n, loads the model from checkpoint_{n-1}.pt
-total_epochs_to_train = 5 #total number of epochs that we want to train for
-checkpoints_dir = os.path.join(os.getcwd(), "checkpoints") # where you wants your  checkpoints to be accessed and saved
+start_epoch = 0 # if set to n, loads the model from checkpoint_{n-1}.pt
+total_epochs_to_train = 100  # total number of epochs that we want to train for
+save_checkpoint_every_n_epochs = 5  # save a checkpoint every n epochs
+checkpoints_dir = os.path.join(os.getcwd(), "checkpoints")  # where you wants your  checkpoints to be accessed and saved
 
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     device = get_system_device()
-    train_datasets, test_datasets = get_MNIST_couples(train=True), get_MNIST_data(train=False)
+    print(f"using device {device}")
+    train_datasets, test_datasets = get_MNIST_couples(train=True), get_MNIST_couples(train=False)
 
-    #plot dataset
+    # plot dataset
     plot_dataset(train_datasets, device=device)
 
     # Create model
-    #clf = ImageClassifier(optimizer=Adam, loss_fn=nn.CrossEntropyLoss, lr=1e-3).to(device)
+    clf = ImageClassifier(n_digits_to_recognize=2, optimizer=Adam, loss_fn=nn.CrossEntropyLoss, lr=5e-3).to(device)
 
     # Load model and optimizer state if resuming training
     #clf, start_epoch = load_model(clf=clf, checkpoints_dir=checkpoints_dir, start_epoch=start_epoch)
 
     # Train
-    # train_model(clf=clf, datasets=datasets, epochs=total_epochs_to_train, start_epoch=start_epoch, device=device,)
+    train_model(clf=clf, datasets=train_datasets, epochs=total_epochs_to_train, start_epoch=start_epoch, device=device,
+                save_checkpoint_every_n_epochs=save_checkpoint_every_n_epochs, checkpoints_dir=checkpoints_dir)
 
     # Test model
-    #test_model_performance(clf, test_datasets, device=device)
+    test_model_performance(clf, test_datasets, device)
 
     # Plot model inference
-    #plot_model_inference(clf, test_datasets, device=device)
+    plot_model_inference(clf, test_datasets, device=device)

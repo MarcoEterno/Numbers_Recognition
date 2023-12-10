@@ -30,7 +30,7 @@ def get_MNIST_couples(train=True, device= get_system_device()):
     print(dataset_path)
     if os.path.exists(dataset_path):
         print("loading the two digit dataset")
-        two_digits_dataset = DataLoader(torch.load(dataset_path), batch_size=256, shuffle=True)
+        two_digits_dataset = DataLoader(torch.load(dataset_path, map_location='cpu'), batch_size=256, shuffle=True)
         return two_digits_dataset
 
     #if dataset does not exist, create it
@@ -57,7 +57,7 @@ def get_MNIST_couples(train=True, device= get_system_device()):
         combined_img.paste(img2, (28, 0))
 
         # Combine labels into a string
-        combined_label = 10* label1 + label2
+        combined_label = 10 * label1 + label2
 
         # Convert combined image and label back to tensor
         combined_img = transforms.ToTensor()(combined_img).to(device)

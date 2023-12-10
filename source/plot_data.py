@@ -9,10 +9,9 @@ from config import get_system_device
 def plot_model_inference(model, test_datasets, n_rows=5, n_cols=10, device=get_system_device()):
     # Get a batch of images and labels from the dataset
     images, labels = next(iter(test_datasets))
-    print(images, labels)
-    images = Tensor.cpu(images)
+
     # Convert the tensor to numpy for visualization
-    images_numpy = images.detach().to_numpy()
+    images_numpy = images.cpu().numpy()
 
     # Move the input tensors to the device
     tensor_images = images.to(get_system_device())
@@ -37,7 +36,6 @@ def plot_model_inference(model, test_datasets, n_rows=5, n_cols=10, device=get_s
 def plot_dataset(datasets, device=get_system_device()):
     # Get a batch of images and labels from the dataset
     images, labels = next(iter(datasets))
-    print(images, labels)
 
     # Convert the tensor to numpy for visualization
     images_numpy = images.cpu().numpy()

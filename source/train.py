@@ -22,7 +22,8 @@ def load_model(clf: ImageClassifier, start_epoch=0, checkpoints_dir="checkpoints
     if os.path.exists(checkpoints_dir):
         # find the last checkpoint that we saved and load it
         for i in range(start_epoch, 0, -1):
-            tentative_last_checkpoint_path = os.path.join(os.getcwd(), checkpoints_dir, f"checkpoint_{i - 1}.pt")
+            tentative_last_checkpoint_path = os.path.join(os.getcwd(), checkpoints_dir,
+                                                          f"{clf.numbers_to_recognize}digit_epoch_{i}.pt")
             if os.path.exists(tentative_last_checkpoint_path):
                 checkpoint = torch.load(tentative_last_checkpoint_path)
                 clf.load_state_dict(checkpoint['model_state_dict'])
@@ -36,7 +37,7 @@ def load_model(clf: ImageClassifier, start_epoch=0, checkpoints_dir="checkpoints
 
 
 def train_model(clf: ImageClassifier, datasets, start_epoch=0, epochs=10, checkpoints_dir="checkpoints",
-                device=get_system_device()):
+                device=get_system_device(), save_checkpoint_every_n_epochs=5):
     # TODO: parallelize the training loop
     # TODO: add validation loop
 
@@ -80,17 +81,19 @@ def train_model(clf: ImageClassifier, datasets, start_epoch=0, epochs=10, checkp
             f"Epoch: {epoch} - Loss:  {round(loss.item(), 3)} - Accuracy: {correct_predictions / total_predictions} "
             f"- Time: {round((time.perf_counter_ns() - start_time) / 1e9, 3)}s")
 
-        # save model and optimizer state after each epoch
-        checkpoint_path = os.path.join(os.getcwd(), checkpoints_dir, f"checkpoint_{epoch}.pt")
-        torch.save(
-            {
-                'epoch': epoch,
-                'model_state_dict': clf.state_dict(),
-                'optimizer_state_dict': clf.optimizer.state_dict(),
-                'loss': loss,
-            },
-            checkpoint_path
-        )
+        # save model and optimizer state after save_checkpoint_every_n_epochs epochs
+        if epoch % save_checkpoint_every_n_epochs == 0:
+            checkpoint_path = os.path.join(os.getcwd(), checkpoints_dir,
+                                           f"{clf.numbers_to_recognize}digit_epoch_{epoch}.pt")
+            torch.save(
+                {
+                    'epoch': epoch,
+                    'model_state_dict': clf.state_dict(),
+                    'optimizer_state_dict': clf.optimizer.state_dict(),
+                    'loss': loss,
+                },
+                checkpoint_path
+            )
 
     # Close the writer instance
     writer.flush()
