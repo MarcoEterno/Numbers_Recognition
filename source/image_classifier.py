@@ -17,6 +17,7 @@ class ImageClassifier(nn.Module):
                 nn.Linear(64 * 28 * 28 * image_upsizing, 10)
             )
         elif n_digits_to_recognize == 2:
+            """
             self.model = nn.Sequential(
                 nn.Conv2d(1, 32, 3, padding=1),  # padding is added to keep the size of the image constant
                 nn.ReLU(),
@@ -42,8 +43,9 @@ class ImageClassifier(nn.Module):
                 nn.Dropout(0.25),
 
                 nn.Flatten(),
-                nn.Linear(in_features=6272, out_features=10 * n_digits_to_recognize) #2688 & 12544
-            )"""
+                nn.Linear(in_features=6272, out_features=10 ** n_digits_to_recognize),
+                nn.Linear(in_features=10 ** n_digits_to_recognize, out_features=10 ** n_digits_to_recognize)
+            )
 
         else:
             raise NotImplementedError("Only 1 or 2 digits recognition has been implemented for now")

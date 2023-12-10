@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca9d787e-50a8-41bd-a469-93cec8b9143a" name="Changes" comment="model trains for two digits classification, but fails to converge">
+    <list default="true" id="ca9d787e-50a8-41bd-a469-93cec8b9143a" name="Changes" comment="model trains for two digits classification with over 95% accuracy">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/data_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/data_loader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/source/image_classifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/image_classifier.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/source/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/main.py" afterDir="false" />
     </list>
@@ -217,7 +215,7 @@
       <workItem from="1701961254147" duration="112000" />
       <workItem from="1701961401606" duration="446000" />
       <workItem from="1701962434804" duration="23799000" />
-      <workItem from="1702053279346" duration="34530000" />
+      <workItem from="1702053279346" duration="35398000" />
     </task>
     <task id="LOCAL-00001" summary="model is trained for 15 epochs and saved. functions are well separated, but not inn different files">
       <option name="closed" value="true" />
@@ -259,7 +257,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702172804417</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="model trains for two digits classification with over 95% accuracy">
+      <option name="closed" value="true" />
+      <created>1702175965876</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1702175965876</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -281,12 +287,13 @@
     <MESSAGE value="model trains well, file are separated, but documentation is not complete" />
     <MESSAGE value="two digits dataset created in the data_loader.py module" />
     <MESSAGE value="model trains for two digits classification, but fails to converge" />
-    <option name="LAST_COMMIT_MESSAGE" value="model trains for two digits classification, but fails to converge" />
+    <MESSAGE value="model trains for two digits classification with over 95% accuracy" />
+    <option name="LAST_COMMIT_MESSAGE" value="model trains for two digits classification with over 95% accuracy" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Image_recognition$python.coverage" NAME="python Coverage Results" MODIFIED="1702053354891" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/mambaforge/envs/torch_pendulum/bin" />
     <SUITE FILE_PATH="coverage/Image_recognition$image_classifier.coverage" NAME="image_classifier Coverage Results" MODIFIED="1702054068227" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/source" />
-    <SUITE FILE_PATH="coverage/Image_recognition$main.coverage" NAME="main Coverage Results" MODIFIED="1702175905953" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/source" />
+    <SUITE FILE_PATH="coverage/Image_recognition$main.coverage" NAME="main Coverage Results" MODIFIED="1702176767804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/source" />
     <SUITE FILE_PATH="coverage/Image_recognition$data_loader.coverage" NAME="data_loader Coverage Results" MODIFIED="1702157565818" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/source" />
     <SUITE FILE_PATH="coverage/Image_recognition$train.coverage" NAME="train Coverage Results" MODIFIED="1701996708738" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/source" />
   </component>
