@@ -1,8 +1,3 @@
-
-
-# Assume you have a Dataset `dataset`
-dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
-
 # Assume `model` is your model
 model = model
 optimizer = optim.Adam(model.parameters(), lr=0.001)
