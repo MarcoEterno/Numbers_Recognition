@@ -9,6 +9,7 @@ from config import get_system_device
 
 
 def get_MNIST_data(train=True, data_loading=True):
+    print(f"Loading the MNIST {'training' if train else 'test'} dataset")
     data = datasets.MNIST(
         root="data",
         train=train,

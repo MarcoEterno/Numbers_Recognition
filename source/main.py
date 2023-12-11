@@ -11,13 +11,18 @@ from image_classifier import ImageClassifier
 from inference import test_model_performance
 from plot_data import plot_dataset
 
+#
+#
+
 # TODO: find a strategy to stop training when the model is overfitting, and give the option to the user to choose.
-# TODO:
+# TODO:add print to reassure the user while dataset is being created
+#TODO: add tensorboard to requirements.txt
+#TODO: add progress bars to reassure the user while training
 
 # Hyperparameters
 n_digits_in_number_to_classify = 3  # number of digits to classify
-start_epoch = 15  # if set to n, loads the model from checkpoint_{n-1}.pt
-total_epochs_to_train = 0  # total number of epochs that we want to train for
+start_epoch = 0  # if set to n, loads the model from checkpoint_{n-1}.pt
+total_epochs_to_train = 15  # total number of epochs that we want to train for
 save_checkpoint_every_n_epochs = 1  # save a checkpoint every n epochs
 
 if __name__ == '__main__':
@@ -45,3 +50,4 @@ if __name__ == '__main__':
 
     # Plot model inference
     plot_model_inference(clf, test_datasets, device=device)
+

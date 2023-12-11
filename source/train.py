@@ -46,6 +46,13 @@ def train_model(clf: ImageClassifier, datasets, start_epoch=0, epochs=10, checkp
     # To access TensorBoard, run the following command in terminal:
     # tensorboard --logdir=logs/fit
 
+    # If the device is CPU and there are multiple cores, use DataParallel
+    # if a gpu is available, DistributedDataParallel is used instead
+    #for now this is on hold since it modifies the model's structure
+    #if device == 'cpu' and torch.get_num_threads() > 1:
+        #clf = torch.nn.DataParallel(clf)
+
+    print(f"Training the model for {epochs} epochs, saving checkpoints every {save_checkpoint_every_n_epochs} epochs")
     for epoch in range(start_epoch, start_epoch + epochs):
         # Used to calculate the accuracy
         total_predictions = 0
@@ -80,7 +87,7 @@ def train_model(clf: ImageClassifier, datasets, start_epoch=0, epochs=10, checkp
             f"Epoch: {epoch} - Loss:  {round(loss.item(), 3)} - Accuracy: {correct_predictions / total_predictions} "
             f"- Time: {round((time.perf_counter_ns() - start_time) / 1e9, 3)}s")
 
-        # save model and optimizer state after save_checkpoint_every_n_epochs epochs
+        # Save model and optimizer state after save_checkpoint_every_n_epochs epochs
         if epoch % save_checkpoint_every_n_epochs == 0:
             checkpoint_path = os.path.join(os.getcwd(), checkpoints_dir,
                                            f"{clf.numbers_to_recognize}_digits_epoch_{epoch}.pt")
