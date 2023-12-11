@@ -3,6 +3,7 @@ import time
 
 import torch
 from torch.utils.tensorboard import SummaryWriter
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from config import get_system_device, checkpoints_path, logs_path
 from image_classifier import ImageClassifier
@@ -24,7 +25,7 @@ def load_model(clf: ImageClassifier, start_epoch=0, checkpoints_dir=checkpoints_
         # find the last checkpoint that we saved and load it
         for i in range(start_epoch, 0, -1):
             tentative_last_checkpoint_path = os.path.join(checkpoints_dir,
-                                                          f"{clf.numbers_to_recognize}_digits_epoch_{i}.pt")
+                                                          f"{clf.numbers_to_recognize}_digit{'s' if clf.numbers_to_recognize!=1 else ''}_epoch_{i}.pt")
             if os.path.exists(tentative_last_checkpoint_path):
                 print(f"Loading the model from : checkpoint_{i}.pt. ")
                 checkpoint = torch.load(tentative_last_checkpoint_path)
@@ -32,6 +33,7 @@ def load_model(clf: ImageClassifier, start_epoch=0, checkpoints_dir=checkpoints_
                 clf.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
                 start_epoch = checkpoint['epoch'] + 1
                 return clf, start_epoch
+        # if no checkpoints are found, load the model randomly initialized
         print(f"No checkpoints found, loading the model randomly initialized")
         return clf, 0
 
@@ -91,7 +93,7 @@ def train_model(clf: ImageClassifier, datasets, start_epoch=0, epochs=10, checkp
         # Save model and optimizer state after save_checkpoint_every_n_epochs epochs
         if epoch % save_checkpoint_every_n_epochs == 0:
             checkpoint_path = os.path.join(os.getcwd(), checkpoints_dir,
-                                           f"{clf.numbers_to_recognize}_digits_epoch_{epoch}.pt")
+                                           f"{clf.numbers_to_recognize}_digit{'s' if clf.numbers_to_recognize!=1 else ''}_epoch_{epoch}.pt")
             torch.save(
                 {
                     'epoch': epoch,

@@ -11,17 +11,39 @@ from image_classifier import ImageClassifier
 from inference import test_model_performance
 from plot_data import plot_dataset
 
+from torchvision import transforms
+
+data_transforms = transforms.Compose([
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(20),
+    transforms.RandomResizedCrop(224),
+    transforms.RandomVerticalFlip(),
+    transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
 #
 #
 
-# TODO: find a strategy to stop training when the model is overfitting, and give the option to the user to choose.
-#TODO: add tensorboard to requirements.txt
-#TODO: add progress bars to reassure the user while training
+# TODO: find a strategy to stop training when the model is overfitting, and give the option to the user to choose. may be early stopping
+# TODO: add tensorboard to requirements.txt
+# TODO: add progress bars to reassure the user while training
+# TODO: add to logs more info (model parameters, validation loss, etc)
+# TODO: add in readme how datasets are created and stored
+# TODO: GUI?
+# TODO: DOCSTRINGS
+# TODO: split training functions
+# TODO: data augmentation
+# TODO: add tests
+# TODO: add checkpoint choosing by inference optimization
+# TODO: fix the parallelization of the model training
+# TODO: bring all params in config sistematically
 
 # Hyperparameters
 n_digits_in_number_to_classify = 1  # number of digits to classify
-start_epoch = 0  # if set to n, loads the model from checkpoint_{n}.pt
-total_epochs_to_train = 5  # total number of epochs that we want to train for
+start_epoch = 5  # if set to n, loads the model from checkpoint_{n}.pt
+total_epochs_to_train = 2  # total number of epochs that we want to train for
 save_checkpoint_every_n_epochs = 1  # save a checkpoint every n epochs
 
 if __name__ == '__main__':
