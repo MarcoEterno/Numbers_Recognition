@@ -48,11 +48,12 @@ def train_model(clf: ImageClassifier, datasets, start_epoch=0, epochs=10, checkp
 
     # If the device is CPU and there are multiple cores, use DataParallel
     # if a gpu is available, DistributedDataParallel is used instead
-    #for now this is on hold since it modifies the model's structure
-    #if device == 'cpu' and torch.get_num_threads() > 1:
-        #clf = torch.nn.DataParallel(clf)
+    # for now this is on hold since it modifies the model's structure
+    # if device == 'cpu' and torch.get_num_threads() > 1:
+    # clf = torch.nn.DataParallel(clf)
 
-    print(f"Training the model for {epochs} epochs, saving checkpoints every {save_checkpoint_every_n_epochs} epochs")
+    print(
+        f"Training the model for {epochs} epochs, saving checkpoints every {save_checkpoint_every_n_epochs if save_checkpoint_every_n_epochs > 1 else '' } epoch{'s.' if save_checkpoint_every_n_epochs > 1 else  '.' }")
     for epoch in range(start_epoch, start_epoch + epochs):
         # Used to calculate the accuracy
         total_predictions = 0
@@ -102,5 +103,5 @@ def train_model(clf: ImageClassifier, datasets, start_epoch=0, epochs=10, checkp
             )
 
     # Close the writer instance
-    #writer.flush()
+    # writer.flush()
     writer.close()

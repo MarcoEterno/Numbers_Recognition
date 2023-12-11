@@ -1,45 +1,51 @@
+import os
+
 import torch
 from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision.transforms import ToTensor, transforms
 from PIL import Image
-import os
 
-from config import get_system_device
+from config import get_system_device, batch_size, data_path,  custom_data_path
 
 
 def get_MNIST_data(train=True, data_loading=True):
     print(f"Loading the MNIST {'training' if train else 'test'} dataset")
     data = datasets.MNIST(
-        root="data",
+        root=data_path,
         train=train,
         download=True,
         transform=ToTensor()
     )
     if data_loading:
-        dataset = DataLoader(data, batch_size=256, shuffle=True)
+        dataset = DataLoader(data, batch_size=batch_size, shuffle=True)
         return dataset
     else:
         return data
 
 
-# create a dataset containing images of two digits from MNIST
+# create a dataset containing images of n digits from MNIST
 def get_n_digits_dataset(n: int, train=True, device=get_system_device()):
     if n < 1:
         raise ValueError("Expected number of digits for the dataset to create is greater than 1")
     if n > 9:
         raise ValueError("Expected number of digits for the dataset to create is less than 10.")
-    dataset_type = 'train' if train else 'validation'
-    dataset_path = os.path.join(os.getcwd(), 'data', 'custom', f'{n}_digits_dataset_{dataset_type}.pt')
+
+    if n == 1:
+        return get_MNIST_data(train=train, data_loading=True)
+
+    dataset_type = 'train' if train else 'test'
+    dataset_path = os.path.join(custom_data_path, f'{n}_digits_dataset_{dataset_type}.pt')
     if os.path.exists(dataset_path):
         print(f"Loading the {n} digits {dataset_type} dataset")
-        n_digits_dataset = DataLoader(torch.load(dataset_path, map_location='cpu'), batch_size=256, shuffle=True)
+        n_digits_dataset = DataLoader(torch.load(dataset_path, map_location='cpu'), batch_size=batch_size, shuffle=True)
         return n_digits_dataset
 
     # if n digits dataset does not exist, create it
     tuples = []
     mnist_dataset = get_MNIST_data(train=train, data_loading=False)
     print(f"Creating the {n} digits {dataset_type} dataset")
+
     for idx in range(len(mnist_dataset)):
         # Get n consecutive images (wrapping around at the end)
         for i in range(n):
@@ -64,7 +70,7 @@ def get_n_digits_dataset(n: int, train=True, device=get_system_device()):
     print(f"{n} digits {dataset_type} dataset created. Saving dataset to {dataset_path}")
     torch.save(tuples, dataset_path)
     print("Loading the dataset")
-    n_digits_dataset = DataLoader(tuples, batch_size=64, shuffle=True)
+    n_digits_dataset = DataLoader(tuples, batch_size=batch_size, shuffle=True)
     return n_digits_dataset
 
 

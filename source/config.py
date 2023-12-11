@@ -6,9 +6,13 @@ import torch
 checkpoints_path = os.path.join(os.path.dirname(os.getcwd()), "checkpoints")
 logs_path = os.path.join(os.path.dirname(os.getcwd()), "logs", "fit")
 data_path = os.path.join(os.path.dirname(os.getcwd()), "data")
+custom_data_path = os.path.join(os.path.dirname(os.getcwd()), "data", "custom")
+plot_path = os.path.join(os.path.dirname(os.getcwd()), "data", "plots")
 #TODO: implement training parallelism
 training_parallelism = True  # if set to True, the training loop will be parallelized using torch.nn.DataParallel. Still to be implemented due to some issues with the model's structure
-fast_training = False if(torch.has_mps or torch.cuda.is_available()) else True  # if manually set to True, the neural network will lose a layer of depth, but will train faster
+fast_training = True #False if(torch.has_mps or torch.cuda.is_available()) else True  # if manually set to True, the neural network will lose a layer of depth, but will train faster
+
+batch_size = 256 if fast_training else 64 #
 
 """
 Training times:
