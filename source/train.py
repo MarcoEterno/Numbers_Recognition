@@ -1,13 +1,14 @@
-import torch
-from torch.utils.tensorboard import SummaryWriter
 import os
 import time
 
-from config import get_system_device
+import torch
+from torch.utils.tensorboard import SummaryWriter
+
+from config import get_system_device, checkpoints_path, logs_path
 from image_classifier import ImageClassifier
 
 
-def load_model(clf: ImageClassifier, start_epoch=0, checkpoints_dir="checkpoints"):
+def load_model(clf: ImageClassifier, start_epoch=0, checkpoints_dir=checkpoints_path):
     """
     Loads the model and optimizer state if resuming training.
     :param clf: the model to load the state into
@@ -16,35 +17,33 @@ def load_model(clf: ImageClassifier, start_epoch=0, checkpoints_dir="checkpoints
     :return:
     """
     if not os.path.exists(checkpoints_dir):
-        print(f"checkpoints directory not found, creating it, and loading the model randomly initialized")
+        print(f"Checkpoints directory not found, creating it, and loading the model randomly initialized")
         os.mkdir(checkpoints_dir)
         return clf, 0
     if os.path.exists(checkpoints_dir):
         # find the last checkpoint that we saved and load it
         for i in range(start_epoch, 0, -1):
-            tentative_last_checkpoint_path = os.path.join(os.getcwd(), checkpoints_dir,
-                                                          f"{clf.numbers_to_recognize}digit_epoch_{i}.pt")
+            tentative_last_checkpoint_path = os.path.join(checkpoints_dir,
+                                                          f"{clf.numbers_to_recognize}_digits_epoch_{i}.pt")
             if os.path.exists(tentative_last_checkpoint_path):
+                print(f"Loading the model from : checkpoint_{i}.pt. ")
                 checkpoint = torch.load(tentative_last_checkpoint_path)
                 clf.load_state_dict(checkpoint['model_state_dict'])
                 clf.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
                 start_epoch = checkpoint['epoch'] + 1
-                print(f"loading the model from : checkpoint_{i - 1}.pt. "
-                      f"Eventual training would resume  from epoch {start_epoch}")
                 return clf, start_epoch
-        print(f"no checkpoints found, loading the model randomly initialized")
+        print(f"No checkpoints found, loading the model randomly initialized")
         return clf, 0
 
 
-def train_model(clf: ImageClassifier, datasets, start_epoch=0, epochs=10, checkpoints_dir="checkpoints",
+def train_model(clf: ImageClassifier, datasets, start_epoch=0, epochs=10, checkpoints_dir=checkpoints_path,
                 device=get_system_device(), save_checkpoint_every_n_epochs=5):
     # TODO: parallelize the training loop
     # TODO: add validation loop
 
     # Create a SummaryWriter instance.
-    logs_path = os.path.join(os.getcwd(), "logs", "fit")
     writer = SummaryWriter(log_dir=logs_path)
-    # To access TensorBoard, run the following command in terminal while in folder source
+    # To access TensorBoard, run the following command in terminal:
     # tensorboard --logdir=logs/fit
 
     for epoch in range(start_epoch, start_epoch + epochs):
@@ -84,7 +83,7 @@ def train_model(clf: ImageClassifier, datasets, start_epoch=0, epochs=10, checkp
         # save model and optimizer state after save_checkpoint_every_n_epochs epochs
         if epoch % save_checkpoint_every_n_epochs == 0:
             checkpoint_path = os.path.join(os.getcwd(), checkpoints_dir,
-                                           f"{clf.numbers_to_recognize}digit_epoch_{epoch}.pt")
+                                           f"{clf.numbers_to_recognize}_digits_epoch_{epoch}.pt")
             torch.save(
                 {
                     'epoch': epoch,
@@ -96,5 +95,5 @@ def train_model(clf: ImageClassifier, datasets, start_epoch=0, epochs=10, checkp
             )
 
     # Close the writer instance
-    writer.flush()
+    #writer.flush()
     writer.close()

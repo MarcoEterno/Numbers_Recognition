@@ -1,5 +1,3 @@
-import torch
-
 from config import get_system_device
 from image_classifier import ImageClassifier
 
