@@ -2,4 +2,4 @@ numpy~=1.25.2
 matplotlib~=3.7.2
 torchvision~=0.15.2
 pillow~=10.0.0
-#tensorboard~=2.15.1
+tensorboard~=2.14.0

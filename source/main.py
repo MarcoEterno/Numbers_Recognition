@@ -12,7 +12,7 @@ from inference import test_model_performance
 from plot_data import plot_dataset
 
 from torchvision import transforms
-
+"""
 data_transforms = transforms.Compose([
     transforms.RandomHorizontalFlip(),
     transforms.RandomRotation(20),
@@ -21,7 +21,7 @@ data_transforms = transforms.Compose([
     transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-])
+])"""
 
 #
 #
@@ -30,7 +30,7 @@ data_transforms = transforms.Compose([
 # TODO: add tensorboard to requirements.txt
 # TODO: add progress bars to reassure the user while training
 # TODO: add to logs more info (model parameters, validation loss, etc)
-# TODO: add in readme how datasets are created and stored
+# -TODO: add in readme how datasets are created and stored
 # TODO: GUI?
 # TODO: DOCSTRINGS
 # TODO: split training functions
@@ -39,11 +39,12 @@ data_transforms = transforms.Compose([
 # TODO: add checkpoint choosing by inference optimization
 # TODO: fix the parallelization of the model training
 # TODO: bring all params in config sistematically
+# TODO: yaml file for config
 
 # Hyperparameters
-n_digits_in_number_to_classify = 1  # number of digits to classify
-start_epoch = 5  # if set to n, loads the model from checkpoint_{n}.pt
-total_epochs_to_train = 2  # total number of epochs that we want to train for
+n_digits_in_number_to_classify = 4  # number of digits to classify
+start_epoch = 0  # if set to n, loads the model from checkpoint_{n}.pt
+total_epochs_to_train = 20  # total number of epochs that we want to train for
 save_checkpoint_every_n_epochs = 1  # save a checkpoint every n epochs
 
 if __name__ == '__main__':
@@ -63,7 +64,7 @@ if __name__ == '__main__':
     clf, start_epoch = load_model(clf=clf, checkpoints_dir=checkpoints_path, start_epoch=start_epoch)
 
     # Train
-    train_model(clf=clf, datasets=train_datasets, epochs=total_epochs_to_train, start_epoch=start_epoch, device=device,
+    train_model(clf=clf, datasets=train_datasets, max_total_epochs=total_epochs_to_train, start_epoch=start_epoch, device=device,
                 save_checkpoint_every_n_epochs=save_checkpoint_every_n_epochs, checkpoints_dir=checkpoints_path)
 
     # Test model

@@ -8,4 +8,6 @@ def test_model_performance(clf: ImageClassifier, test_datasets, device=get_syste
     x = x.to(device)
     y = y.to(device)
     output = clf(x)
-    print((output.argmax(1) == y).sum().item() / len(y))
+    accuracy = (output.argmax(1) == y).sum().item() / len(y)
+    print("model accuracy on test dataset is: ", accuracy)
+    return accuracy

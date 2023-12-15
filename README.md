@@ -1,4 +1,5 @@
-# Handwritten Digit Recognition Project
+# Numbers recognition
+![sample_model_inference.png](sample_model_inference.png)
 
 ## Overview
 
@@ -31,4 +32,17 @@ Install the required packages:
 ```bash
 pip install -r requirements.txt
 ```
+Enter the source folder:
+```bash
+cd Numbers_Recognition/source
+```
+Execute the main.py file:
+```bash
+python3 main.py
+```
+After the first run, feel free to play with the parameters in the config module, 
+and experiment with new modalities.
 
+## Usage
+
+## Dataset Creation

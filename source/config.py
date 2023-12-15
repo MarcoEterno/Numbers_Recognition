@@ -8,11 +8,25 @@ logs_path = os.path.join(os.path.dirname(os.getcwd()), "logs", "fit")
 data_path = os.path.join(os.path.dirname(os.getcwd()), "data")
 custom_data_path = os.path.join(os.path.dirname(os.getcwd()), "data", "custom")
 plot_path = os.path.join(os.path.dirname(os.getcwd()), "data", "plots")
+
+
+#TRAINING SETTINGS
 #TODO: implement training parallelism
 training_parallelism = True  # if set to True, the training loop will be parallelized using torch.nn.DataParallel. Still to be implemented due to some issues with the model's structure
 fast_training = True #False if(torch.has_mps or torch.cuda.is_available()) else True  # if manually set to True, the neural network will lose a layer of depth, but will train faster
 
+#HYPERPARAMETERS
 batch_size = 256 if fast_training else 64 #
+learning_rate = 0.001 if fast_training else 0.0001
+momentum = 0.9
+weight_decay = 0.0001
+
+
+n_digits_in_number_to_classify = 3  # number of digits to classify
+start_epoch = 0  # if set to n, loads the model from checkpoint_{n}.pt
+total_epochs_to_train = 15  # total number of epochs that we want to train for
+save_checkpoint_every_n_epochs = 1  # save a checkpoint every n epochs
+
 
 """
 Training times:

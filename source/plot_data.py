@@ -17,7 +17,7 @@ def plot_model_inference(model, test_datasets, n_rows=5, n_cols=10, device=get_s
     # Move the input tensors to the device
     tensor_images = images.to(device)
     # Plot the images
-    fig = plt.figure(figsize=(25, 4))
+    fig = plt.figure(figsize=(15, 7))
 
     # Display n_rows*n_cols images
     for idx in np.arange(n_rows * n_cols):
