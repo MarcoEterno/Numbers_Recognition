@@ -1,5 +1,5 @@
 # Numbers recognition
-![/data/sample_model_inference.png](sample_model_inference.png)
+![sample_model_inference.png](sample_model_inference.png)
 
 ## Overview
 
