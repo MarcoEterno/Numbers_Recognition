@@ -50,4 +50,10 @@ Once a dataset is created, it is stored in the data folder, and can be retrieved
 
 ## Training process
 Training saves model checkpoints every epoch. checkpoints can be evaluated using the model_evaluator module, in order to find the best model.
+Validation accuracy and loss can be observed in real time using Tensorboard running the terminal command:
+```bash
+tensorboard --logdir logs
+```
+
+
 
