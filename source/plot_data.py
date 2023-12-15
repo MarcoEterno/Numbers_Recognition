@@ -64,6 +64,7 @@ def plot_dataset(datasets: Tensor):
 
     # save the image to the sample dataset directory
     sample_dataset_path = os.path.join(plot_path, 'sample_dataset.png')
+    os.makedirs(os.path.dirname(sample_dataset_path), exist_ok=True)
     print(f"Saving the sample dataset image to {sample_dataset_path}")
     plt.savefig(sample_dataset_path, bbox_inches='tight')
     plt.show()
