@@ -13,7 +13,7 @@ class ImageClassifier(nn.Module):
         if n_digits_to_recognize > 4:
             raise NotImplementedError(
                 "Too many digits to recognize. This model can only recognize up to 4 digits. "
-                "If you feel brave and want to set your machine on fire, remove the safety check and try again.")
+                "If you feel brave and want to set your machine on fire, remove this safety check and try again.")
         if n_digits_to_recognize < 1:
             raise ValueError("Number of digits to recognize must be greater than 0.")
         if image_upsizing < 1:
@@ -55,7 +55,7 @@ class ImageClassifier(nn.Module):
         )
 
     def initialize_high_accuracy_model(self):
-        print("Initializing high accuracy model is not reccomended. Please use fast training mode.")
+        print("Initializing high accuracy model is not reccomended and only works for 3 digits. Please use fast training mode instead.")
         self.model = nn.Sequential(
             nn.Conv2d(1, 32, 3, padding=1),
             nn.BatchNorm2d(32),

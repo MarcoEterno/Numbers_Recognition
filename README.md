@@ -43,8 +43,11 @@ and experiment with new modalities.
 
 ## Dataset Creation
 The dataset is created using the MNIST dataset, which is a dataset of handwritten digits.
-After downloading the dataset fo single digits, the images are combined to create images with multiple digits.
+
+After downloading the dataset fo single digits, the images are combined to create images with multiple digits, and data augmentation is applied to improove the generated dataset quality (still to implement).
+
 Once a dataset is created, it is stored in the data folder, and can be retrieved for faster future use.
 
-
+## Training process
+Training saves model checkpoints every epoch. checkpoints can be evaluated using the model_evaluator module, in order to find the best model.
 

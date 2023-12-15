@@ -41,10 +41,12 @@ data_transforms = transforms.Compose([
 # TODO: bring all params in config sistematically
 # TODO: yaml file for config
 
+# TODO: it is possible to separate the training of dense and convolutional layers, and train them separately, but it is not implemented yet
+
 # Hyperparameters
-n_digits_in_number_to_classify = 4  # number of digits to classify
+n_digits_in_number_to_classify = 2  # number of digits to classify
 start_epoch = 0  # if set to n, loads the model from checkpoint_{n}.pt
-total_epochs_to_train = 20  # total number of epochs that we want to train for
+total_epochs_to_train = 10  # total number of epochs that we want to train for
 save_checkpoint_every_n_epochs = 1  # save a checkpoint every n epochs
 
 if __name__ == '__main__':
