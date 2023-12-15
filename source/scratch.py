@@ -5,6 +5,38 @@ from torch.nn import CrossEntropyLoss
 
 from config import get_system_device, checkpoints_path, logs_path
 from image_classifier import ImageClassifier
+from torchvision import transforms
+
+"""
+data_transforms = transforms.Compose([
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(20),
+    transforms.RandomResizedCrop(224),
+    transforms.RandomVerticalFlip(),
+    transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])"""
+
+#
+#
+# TODO: wht is the SVHN dataset?
+# TODO: find a strategy to stop training when the model is overfitting, and give the option to the user to choose. may be early stopping
+# TODO: add tensorboard to requirements.txt
+# TODO: add progress bars to reassure the user while training
+# TODO: add to logs more info (model parameters, validation loss, etc)
+# TODO: add in readme how datasets are created and stored
+# TODO: GUI?
+# TODO: DOCSTRINGS
+# TODO: split training functions
+# TODO: data augmentation
+# TODO: add tests
+# TODO: add checkpoint choosing by inference optimization
+# TODO: fix the parallelization of the model training
+# TODO: bring all params in config sistematically
+# TODO: yaml file for config
+# TODO: it is possible to separate the training of dense and convolutional layers, and train them separately, but it is not implemented yet
+
 
 
 def train_epoch(clf: ImageClassifier, train_dataloader, validation_dataloader, device=get_system_device()):

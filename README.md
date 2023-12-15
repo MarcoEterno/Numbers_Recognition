@@ -1,5 +1,5 @@
 # Numbers recognition
-![sample_model_inference.png](sample_model_inference.png)
+![/data/sample_model_inference.png](sample_model_inference.png)
 
 ## Overview
 
@@ -54,6 +54,7 @@ Validation accuracy and loss can be observed in real time using Tensorboard runn
 ```bash
 tensorboard --logdir logs
 ```
-
+If a GPU is available, It is highly recommended to use it, since the training process is very computationally expensive.
+Under no circumstance is a good idea to train the model to recognize more than 4 digits. More details on the training times are available in the config module.
 
 

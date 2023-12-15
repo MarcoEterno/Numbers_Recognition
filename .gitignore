@@ -1,4 +1,5 @@
 .idea
 data
 !data/.gitkeep
+!data/sample_model_inference.png
 source/scratch.py
