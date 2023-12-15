@@ -25,12 +25,12 @@ data_transforms = transforms.Compose([
 
 #
 #
-
+# TODO: wht is the SVHN dataset?
 # TODO: find a strategy to stop training when the model is overfitting, and give the option to the user to choose. may be early stopping
 # TODO: add tensorboard to requirements.txt
 # TODO: add progress bars to reassure the user while training
 # TODO: add to logs more info (model parameters, validation loss, etc)
-# -TODO: add in readme how datasets are created and stored
+# TODO: add in readme how datasets are created and stored
 # TODO: GUI?
 # TODO: DOCSTRINGS
 # TODO: split training functions

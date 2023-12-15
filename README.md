@@ -3,15 +3,14 @@
 
 ## Overview
 
-This project aims to develop a machine learning model capable of recognizing and classifying handwritten digits. Unlike many basic models that focus on single-digit recognition, our project extends this functionality to handle multiple digits, making it suitable for more complex applications such as reading handwritten numbers from documents, forms, or images in the real world.
+This project aims to build a neural network that can recognize handwritten numbers from images.
+The project is designed for educational purposes, and leaves freedom of adjusting the parameters to the user, such as:
+- the numbers of digits the model has to recognize
+- the data augmentation parameters
+- the number of layers of the convolutional neural networks
+- the training parameters
 
-## Features
-
-- **Data Preprocessing**: Includes scripts for cleaning and normalizing the input images.
-- **Model Training**: Utilizes Convolutional Neural Networks (CNNs) to recognize patterns in digits.
-- **Accuracy Improvement**: Techniques like data augmentation, dropout, and batch normalization to improve model accuracy.
-- **Multi-Digit Recognition**: Specialized algorithms to handle sequences of digits.
-- **User Interface**: A simple UI to upload images and view predictions.
+and many more.
 
 ## Prerequisites
 
@@ -19,7 +18,6 @@ This project aims to develop a machine learning model capable of recognizing and
 - TensorFlow 2.x
 - NumPy
 - Matplotlib (for visualization)
-- OpenCV (for image processing)
 
 ## Installation
 
@@ -43,6 +41,10 @@ python3 main.py
 After the first run, feel free to play with the parameters in the config module, 
 and experiment with new modalities.
 
-## Usage
-
 ## Dataset Creation
+The dataset is created using the MNIST dataset, which is a dataset of handwritten digits.
+After downloading the dataset fo single digits, the images are combined to create images with multiple digits.
+Once a dataset is created, it is stored in the data folder, and can be retrieved for faster future use.
+
+
+
