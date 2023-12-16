@@ -36,7 +36,7 @@ data_transforms = transforms.Compose([
 # TODO: bring all params in config sistematically
 # TODO: yaml file for config
 # TODO: it is possible to separate the training of dense and convolutional layers, and train them separately, but it is not implemented yet
-
+# TODO: increase font boldness in plots
 
 
 def train_epoch(clf: ImageClassifier, train_dataloader, validation_dataloader, device=get_system_device()):
@@ -162,3 +162,4 @@ def train_model(model, training_datasets, validationz_dataloader, start_epoch=0,
         print(f'Epoch {epoch}, Train Loss: {train_loss}, Train Accuracy: {train_accuracy}, Val Loss: {val_loss}')
 
     return model
+

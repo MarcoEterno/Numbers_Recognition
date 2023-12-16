@@ -44,7 +44,7 @@ and experiment with new modalities.
 ## Dataset Creation
 The dataset is created using the MNIST dataset, which is a dataset of handwritten digits.
 
-After downloading the dataset fo single digits, the images are combined to create images with multiple digits, and data augmentation is applied to improove the generated dataset quality (still to implement).
+After downloading the dataset fo single digits, the images are combined to create images with multiple digits, and data augmentation is applied to improve the generated dataset quality (still to implement).
 
 Once a dataset is created, it is stored in the data folder, and can be retrieved for faster future use.
 

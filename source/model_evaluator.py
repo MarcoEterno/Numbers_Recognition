@@ -32,9 +32,27 @@ def plot_accuracy(accuracy, n_digits_in_number_to_classify):
     plt.savefig(os.path.join(custom_data_path, f"accuracy_{n_digits_in_number_to_classify}_digit{'s'if n_digits_in_number_to_classify!=1 else ''}.png"))
     plt.show()
 
-# Given a set of checkpoints, find the best one
-if __name__ == '__main__':
+def explore_network_weights(clf: ImageClassifier):
+    total_params = 0
+    for layer in clf.model:
+        print(layer)
+        if isinstance(layer, (nn.Linear, nn.Conv2d)):
+            print(layer.weight.shape)
+            print(layer.bias.shape)
+            print(layer.weight.data.shape)
+            print(layer.bias.data.shape)
 
+            #calculating the totl number of parameters
+            n_params = layer.weight.numel() + layer.bias.numel()
+            print(f"Number of parameters in layer {layer}: {n_params}")
+            total_params += n_params
+    print(f"Total number of parameters:  {total_params}")
+def evaluate_all_chepoints():
+    """
+    This function evaluates all checkpoints for each number of digits to classify.
+    It also plots the accuracy for each number of digits to classify.
+    :return:
+    """
     for n_digits_in_number_to_classify in range(2, 3):
         accuracy = defaultdict(list)
         best_model_epoch = defaultdict(int)
@@ -66,6 +84,10 @@ if __name__ == '__main__':
         clf, epoch = load_model(clf=clf, checkpoints_dir=checkpoints_path, start_epoch=best_model_epoch[n_digits_in_number_to_classify])
         plot_model_inference(clf, get_n_digits_dataset(n=n_digits_in_number_to_classify, train=False))
 
+if __name__ == '__main__':
+
+    clf = ImageClassifier(n_digits_to_recognize=1, optimizer=Adam)
+    explore_network_weights(clf)
 
 """
 Keep track of best models:
