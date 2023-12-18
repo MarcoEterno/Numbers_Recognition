@@ -5,15 +5,17 @@ from config import fast_training
 
 
 class ImageClassifier(nn.Module):
-    def __init__(self, n_digits_to_recognize=1, image_upsizing=1, loss_fn=nn.CrossEntropyLoss, optimizer=Adam, lr=1e-3, print_info=True):
+    def __init__(self, n_digits_to_recognize=1, image_upsizing=1, loss_fn=nn.CrossEntropyLoss, optimizer=Adam, lr=1e-3,
+                 print_info=True):
         super().__init__()
         self.numbers_to_recognize = n_digits_to_recognize
         self.image_upsizing = image_upsizing
         self.model = None
         if n_digits_to_recognize > 4:
-            raise NotImplementedError(
-                "Too many digits to recognize. This model can only recognize up to 4 digits. "
-                "If you feel brave and want to set your machine on fire, remove this safety check and try again.")
+            pass
+            # raise NotImplementedError(
+            # "Too many digits to recognize. This model can only recognize up to 4 digits. "
+            # "If you feel brave and want to set your machine on fire, remove this safety check and try again.")
         if n_digits_to_recognize < 1:
             raise ValueError("Number of digits to recognize must be greater than 0.")
         if image_upsizing < 1:
@@ -49,13 +51,14 @@ class ImageClassifier(nn.Module):
             nn.Dropout(0.25),
             nn.Flatten(),
             nn.Linear(in_features=64 * 28 * 28 * self.numbers_to_recognize // 16,
-                      out_features=10 ** self.numbers_to_recognize),
+                      out_features=10 * self.numbers_to_recognize),
             # in_features = in_channels*dim_input // 4**(n_max_pooling_layers)
-            nn.Linear(in_features=10 ** self.numbers_to_recognize, out_features=10 ** self.numbers_to_recognize)
+            nn.Linear(in_features=10 * self.numbers_to_recognize, out_features=10 ** self.numbers_to_recognize)
         )
 
     def initialize_high_accuracy_model(self):
-        print("Initializing high accuracy model is not reccomended and only works for 3 digits. Please use fast training mode instead.")
+        print(
+            "High accuracy mode is not reccomended and only works for 3 digits. Please use fast training mode instead.")
         self.model = nn.Sequential(
             nn.Conv2d(1, 32, 3, padding=1),
             nn.BatchNorm2d(32),

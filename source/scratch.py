@@ -18,6 +18,7 @@ data_transforms = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])"""
 
+
 #
 #
 # TODO: wht is the SVHN dataset?
@@ -69,7 +70,7 @@ def train_epoch(clf: ImageClassifier, train_dataloader, validation_dataloader, d
     return average_training_loss, accuracy
 
 
-def validate_epoch(clf : ImageClassifier, dataloader, device = get_system_device()):
+def validate_epoch(clf: ImageClassifier, dataloader, device=get_system_device()):
     validation_loss = 0.0
     with torch.no_grad():
         for batch in dataloader:
@@ -84,13 +85,15 @@ def validate_epoch(clf : ImageClassifier, dataloader, device = get_system_device
     average_validation_loss = validation_loss / len(dataloader)
     return average_validation_loss
 
-def save_checkpoint(model, epoch, checkpoints_dir= checkpoints_path):
+
+def save_checkpoint(model, epoch, checkpoints_dir=checkpoints_path):
     checkpoint_path = os.path.join(checkpoints_dir, f"checkpoint_{epoch}.pt")
     torch.save({
         'epoch': epoch,
         'model_state_dict': model.state_dict(),
         'optimizer_state_dict': model.optimizer.state_dict(),
     }, checkpoint_path)
+
 
 def load_predifined_checkpoint(clf: ImageClassifier, predefined_checkpoints_path, epoch):
     checkpoint = torch.load(predefined_checkpoints_path)
@@ -120,15 +123,15 @@ def load_latest_available_checkpoint(clf: ImageClassifier, start_epoch=0, checkp
                                                           f"{clf.numbers_to_recognize}_digit{'s' if clf.numbers_to_recognize != 1 else ''}_epoch_{i}.pt")
             if os.path.exists(tentative_last_checkpoint_path):
                 print(f"Loading the model from : checkpoint_{i}.pt. ")
-                clf= load_predifined_checkpoint(clf, tentative_last_checkpoint_path, epoch=i)
-                return clf, i+1 #if checkpoint is found, start from the next epoch
+                clf = load_predifined_checkpoint(clf, tentative_last_checkpoint_path, epoch=i)
+                return clf, i + 1  # if checkpoint is found, start from the next epoch
         # if no checkpoints are found, load the model randomly initialized
         print(f"No checkpoints found, loading the model randomly initialized")
         return clf, 0
 
 
-def train_model(model, training_datasets, validationz_dataloader, start_epoch=0, max_total_epochs=10, checkpoints_dir='checkpoints',
-                , save_checkpoint_every_n_epochs=5, device=get_system_device()):
+def train_model(model, training_datasets, validation_dataloader, start_epoch=0, max_total_epochs=10,
+                checkpoints_dir='checkpoints', save_checkpoint_every_n_epochs=5, device=get_system_device()):
     if not os.path.exists(checkpoints_dir):
         os.makedirs(checkpoints_dir)
 
@@ -141,9 +144,12 @@ def train_model(model, training_datasets, validationz_dataloader, start_epoch=0,
     epochs_no_improve = 0
     n_epochs_stop = 5
 
+    # substitute with appropriate dataloader
+    validation_dataloader = training_datasets
+
     for epoch in range(start_epoch, start_epoch + max_total_epochs):
-        train_loss, train_accuracy = train_epoch(model, training_datasets, criterion, optimizer, device)
-        val_loss = validate_epoch(model, validation_dataloader, criterion, device)
+        train_loss, train_accuracy = train_epoch(model, training_datasets, criterion, optimizer)
+        val_loss = validate_epoch(model, validation_dataloader, criterion)
 
         if val_loss < min_val_loss:
             save_checkpoint(model, epoch, checkpoints_dir)
@@ -162,4 +168,3 @@ def train_model(model, training_datasets, validationz_dataloader, start_epoch=0,
         print(f'Epoch {epoch}, Train Loss: {train_loss}, Train Accuracy: {train_accuracy}, Val Loss: {val_loss}')
 
     return model
-
