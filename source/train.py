@@ -1,13 +1,11 @@
 import os
 import time
-from sched import scheduler
 
 import torch
 from torch.utils.tensorboard import SummaryWriter
-from torch.optim.lr_scheduler import ReduceLROnPlateau
 
-from config import get_system_device, checkpoints_path, logs_path
-from image_classifier import ImageClassifier
+from source.config import get_system_device, checkpoints_path, logs_path
+from source.image_classifier import ImageClassifier
 
 
 def load_model(clf: ImageClassifier, start_epoch=0, checkpoints_dir=checkpoints_path):
@@ -37,6 +35,7 @@ def load_model(clf: ImageClassifier, start_epoch=0, checkpoints_dir=checkpoints_
         # if no checkpoints are found, load the model randomly initialized
         print(f"No checkpoints found, loading the model randomly initialized")
         return clf, 0
+
 
 def save_model(clf: ImageClassifier, epoch, checkpoints_dir=checkpoints_path):
     checkpoint_path = os.path.join(checkpoints_dir,

@@ -1,3 +1,7 @@
+"""
+The module serves the purpose of evaluating multiple model checkpoints, in order to find the best one.
+"""
+
 import os
 from collections import defaultdict
 

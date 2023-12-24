@@ -36,22 +36,51 @@ class ImageClassifier(nn.Module):
     def forward(self, x):
         return self.model(x)
 
+    # def initialize_fast_training_model(self):
+    #     self.model = nn.Sequential(
+    #         nn.Conv2d(1, 32, 3, padding=1),
+    #         nn.BatchNorm2d(32),
+    #         nn.ReLU(),
+    #         nn.MaxPool2d(kernel_size=2),
+    #         nn.Dropout(0.25),
+    #
+    #         nn.Conv2d(32, 64, 3, padding=1),
+    #         nn.BatchNorm2d(64),
+    #         nn.ReLU(),
+    #         nn.MaxPool2d(kernel_size=2),
+    #         nn.Dropout(0.25),
+    #         nn.Flatten(),
+    #         nn.Linear(in_features=64 * 28 * 28 * self.numbers_to_recognize // 16,
+    #                   out_features=10 * self.numbers_to_recognize),
+    #         # in_features = in_channels*dim_input // 4**(n_max_pooling_layers)
+    #         nn.Linear(in_features=10 * self.numbers_to_recognize, out_features=10 ** self.numbers_to_recognize)
+    #     )
+
     def initialize_fast_training_model(self):
         self.model = nn.Sequential(
-            nn.Conv2d(1, 32, 3, padding=1),
-            nn.BatchNorm2d(32),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2),
-            nn.Dropout(0.25),
-
-            nn.Conv2d(32, 64, 3, padding=1),
+            nn.Conv2d(1, 64, 3, padding=1),
             nn.BatchNorm2d(64),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),
-            nn.Dropout(0.25),
+            #nn.Dropout(0.25),
+
+            nn.Conv2d(64, 128, 3, padding=1),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2),
+            #nn.Dropout(0.25),
+
+            nn.Conv2d(128, 256, 3, padding=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2),
+
+            nn.AdaptiveAvgPool2d((1, 1)),
+
             nn.Flatten(),
-            nn.Linear(in_features=64 * 28 * 28 * self.numbers_to_recognize // 16,
+            nn.Linear(in_features=256,
                       out_features=10 * self.numbers_to_recognize),
+            nn.ReLU(),
             # in_features = in_channels*dim_input // 4**(n_max_pooling_layers)
             nn.Linear(in_features=10 * self.numbers_to_recognize, out_features=10 ** self.numbers_to_recognize)
         )

@@ -1,20 +1,18 @@
-import os
-
 from torch import nn
 from torch.optim import Adam
 
-from config import get_system_device, checkpoints_path, custom_data_path
+from config import get_system_device, checkpoints_path
 from data_loader import get_n_digits_dataset
-from plot_data import plot_model_inference
-from train import train_model, load_model
 from image_classifier import ImageClassifier
 from inference import test_model_performance
 from plot_data import plot_dataset
+from plot_data import plot_model_inference
+from train import train_model, load_model
 
 # Hyperparameters
 NUM_DIGITS = 3  # number of digits to classify
-start_epoch = 0  # if set to n, loads the model from checkpoint_{n}.pt. if checkpoint_{n}.pt does not exist, it will start training from the latest available checkpoint
-total_epochs_to_train = 21  # total number of epochs that we want to train for
+start_epoch = 40  # if set to n, loads the model from checkpoint_{n}.pt. if checkpoint_{n}.pt does not exist, it will start training from the latest available checkpoint
+total_epochs_to_train = 40  # total number of epochs that we want to train for
 save_checkpoint_every_n_epochs = 5  # save a checkpoint every n epochs
 
 # TODO: PROJECT NAME NON CAPS WITH -
@@ -22,7 +20,7 @@ save_checkpoint_every_n_epochs = 5  # save a checkpoint every n epochs
 
 if __name__ == '__main__':
     device = get_system_device(print_info=True)
-    train_datasets = get_n_digits_dataset(n=NUM_DIGITS, train=True)
+    train_datasets= get_n_digits_dataset(n=NUM_DIGITS, train=True)
     test_datasets = get_n_digits_dataset(n=NUM_DIGITS, train=False)
 
     # plot dataset
