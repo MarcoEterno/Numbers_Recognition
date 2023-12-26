@@ -62,13 +62,13 @@ class ImageClassifier(nn.Module):
             nn.BatchNorm2d(64),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),
-            #nn.Dropout(0.25),
+            nn.Dropout(0.25),
 
             nn.Conv2d(64, 128, 3, padding=1),
             nn.BatchNorm2d(128),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),
-            #nn.Dropout(0.25),
+            nn.Dropout(0.25),
 
             nn.Conv2d(128, 256, 3, padding=1),
             nn.BatchNorm2d(256),

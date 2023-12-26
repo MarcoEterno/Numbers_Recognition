@@ -53,10 +53,14 @@ def save_model(clf: ImageClassifier, epoch, checkpoints_dir=checkpoints_path):
 def decide_if_model_needs_saving(clf: ImageClassifier, epoch, save_checkpoint_every_n_epochs, save,checkpoints_dir=checkpoints_path):
     return epoch % save_checkpoint_every_n_epochs
 
-def train_model(clf: ImageClassifier, datasets, start_epoch=0, max_total_epochs=10, checkpoints_dir=checkpoints_path,
+def train_model(clf: ImageClassifier, training_dataloader, validation_dataloader, start_epoch=0, max_total_epochs=10, checkpoints_dir=checkpoints_path,
                 device=get_system_device(), save_checkpoint_every_n_epochs=5):
     # TODO: parallelize the training loop
     # TODO: add validation
+
+    if max_total_epochs == 0:
+        print("No epochs to train for. Exiting training stage.")
+        return
 
     # Create a SummaryWriter instance.
     writer = SummaryWriter(log_dir=logs_path)
@@ -79,7 +83,7 @@ def train_model(clf: ImageClassifier, datasets, start_epoch=0, max_total_epochs=
         # Time the training loop
         start_time = time.perf_counter_ns()
 
-        for batch in datasets:
+        for batch in training_dataloader:
             x, y = batch
             x = x.to(device)
             y = y.to(device)
@@ -96,18 +100,40 @@ def train_model(clf: ImageClassifier, datasets, start_epoch=0, max_total_epochs=
             total_predictions += y.size(0)
             correct_predictions += (predicted == y).sum().item()
 
-        # Log accuracy and other metrics to tensorboard
-        writer.add_scalar("Accuracy/train", correct_predictions / total_predictions, epoch)
-        writer.add_scalar("Learning rate", clf.optimizer.param_groups[0]['lr'], epoch)
-        writer.add_scalar("Time", round((time.perf_counter_ns() - start_time) / 1e9, 3), epoch)
+        train_accuracy = correct_predictions / total_predictions
+
+        #evaluate model on validation dataset
+        clf.eval()  # Set model to evaluation mode
+        with torch.no_grad():
+            total_val_predictions = 0
+            correct_val_predictions = 0
+            for val_batch in validation_dataloader:
+                x_val, y_val = val_batch
+                x_val = x_val.to(device)
+                y_val = y_val.to(device)
+                output_val = clf(x_val)
+                _, predicted_val = torch.max(output_val.data, 1)
+                total_val_predictions += y_val.size(0)
+                correct_val_predictions += (predicted_val == y_val).sum().item()
+
+            val_accuracy = correct_val_predictions / total_val_predictions
+
+            # Log accuracy and other metrics to tensorboard
+            writer.add_scalar("Accuracy/train", train_accuracy, epoch)
+            writer.add_scalar("Accuracy/validation", val_accuracy, epoch)
+            writer.add_scalar("Loss/train", loss, epoch)
+            writer.add_scalar("Time", round((time.perf_counter_ns() - start_time) / 1e9, 3), epoch)
+            writer.add_scalar("Learning rate", clf.optimizer.param_groups[0]['lr'], epoch)
         print(
-            f"Epoch: {epoch} - Loss:  {round(loss.item(), 3)} - Accuracy: {correct_predictions / total_predictions} "
-            f"- Time: {round((time.perf_counter_ns() - start_time) / 1e9, 3)}s")
+            f"Epoch: {epoch} - Train Accuracy: {round(train_accuracy,4)} - Validation Accuracy: {round(val_accuracy,4)}"
+            f" - Time: {round((time.perf_counter_ns() - start_time) / 1e9, 3)}s")
+
+        clf.train()  # Set model back to training mode
 
         # Save model and optimizer state after save_checkpoint_every_n_epochs epochs
         if epoch % save_checkpoint_every_n_epochs == 0:
             save_model(clf, epoch, checkpoints_dir)
 
     # Close the writer instance
-    # writer.flush()
+    writer.flush()
     writer.close()

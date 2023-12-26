@@ -26,6 +26,7 @@ def get_MNIST_data(train=True, data_loading=True):
     else:
         return data
 
+
 def train_test_split(dataset: Dataset, train_size=0.8, data_loading=True):
     """
     Splits a dataset into a train and test dataset
@@ -44,7 +45,8 @@ def train_test_split(dataset: Dataset, train_size=0.8, data_loading=True):
     else:
         return train_data, test_data
 
-def get_MNIST_train_test_data(data_loading=True):
+
+def get_MNIST_train_test_data(train_size = 0.8, data_loading=True):
     """
     Loads the MNIST training and test datasets
     :param data_loading: if True, returns the train and test datasets as DataLoader objects, otherwise returns them as Dataset objects
@@ -57,10 +59,8 @@ def get_MNIST_train_test_data(data_loading=True):
         transform=ToTensor()
     )
     # Performing a train test split on the MNIST dataset
-    train_data, test_data = train_test_split(original_training_data, train_size=0.8, data_loading=data_loading)
+    train_data, test_data = train_test_split(original_training_data, train_size=train_size, data_loading=data_loading)
     return train_data, test_data
-
-
 
 
 def check_bounds_for_n_digits_dataset(n: int):
@@ -125,7 +125,24 @@ def get_n_digits_dataset(n: int, train=True, augment_data=False, scale_data_line
     n_digits_dataset = DataLoader(tuples, batch_size=batch_size, shuffle=True)
     return n_digits_dataset
 
-def get_n_digits_train_test_dataset(n: int, augment_data=False, scale_data_linearly=False, device=get_system_device()):
+
+def create_n_digits_train_test_dataset(n: int, train_dataset_path, test_dataset_path, augment_data=False, scale_data_linearly=False,
+                            device=get_system_device()):
+    original_train_dataset = get_n_digits_dataset(n, train=True, augment_data=augment_data,
+                                                  scale_data_linearly=scale_data_linearly, device=device)
+    original_validation_dataset = get_n_digits_dataset(n, train=False, augment_data=augment_data,
+                                                       scale_data_linearly=scale_data_linearly, device=device)
+    train_dataset, test_dataset = train_test_split(original_train_dataset, train_size=0.8, data_loading=True)
+    os.makedirs(os.path.dirname(train_dataset_path), exist_ok=True)
+    os.makedirs(os.path.dirname(test_dataset_path), exist_ok=True)
+    print(
+        f"{n} digits train and test dataset created. Saving dataset for future use to: {train_dataset_path} and {test_dataset_path}")
+    torch.save(train_dataset, train_dataset_path)
+    torch.save(test_dataset, test_dataset_path)
+    return train_dataset, test_dataset
+
+
+def get_n_digits_train_validation_test_datasets(n: int, augment_data=False, scale_data_linearly=False, device=get_system_device()):
     """
     Creates a dataset containing images of n digits from MNIST by combining n images from the MNIST dataset side by side
     :param n: number of digits to combine into a single image
@@ -134,108 +151,22 @@ def get_n_digits_train_test_dataset(n: int, augment_data=False, scale_data_linea
     :param scale_data_linearly: if True, produces a dataset of size linear with the number of digits to recognize
     :param device: the device to load the dataset on
     """
-    original_train_dataset = get_n_digits_dataset(train=True, augment_data=augment_data, scale_data_linearly=scale_data_linearly, device=device)
-    original_test_dataset = get_n_digits_dataset(train=False, augment_data=augment_data, scale_data_linearly=scale_data_linearly, device=device)
-    train_dataset, test_dataset = train_test_split(original_train_dataset, train_size=0.8, data_loading=True)
-
-    train_dataset_path = os.path.join(custom_data_path, f'{n}_digits_dataset_train.pt')
-    test_dataset_path = os.path.join(custom_data_path, f'{n}_digits_dataset_test.pt')
-
-    # if n digits train dataset already exists, load it
-    if os.path.exists(train_dataset_path):
-        print(f"Loading the {n} digits train dataset")
-        n_digits_train_dataset = DataLoader(torch.load(train_dataset_path, map_location='cpu'), batch_size=batch_size, shuffle=True)
-    else:
-        # if n digits dataset does not exist, create it
-        tuples = []
-        mnist_train_dataset = get_MNIST_data(train=True, data_loading=False)
-        print(f"Creating the {n} digits {train_dataset_type} dataset")
-
-        for idx in range(len(mnist_train_dataset)):
-            # Get n consecutive images (wrapping around at the end)
-            for i in range(n):
-                img, label = mnist_train_dataset[(idx + i) % len(mnist_train_dataset)]
-                img = transforms.ToPILImage()(img)
-                # Combine images side by side
-                if i == 0:
-                    combined_img = Image.new('L', (28 * n, 28))
-                    combined_img.paste(img, (0, 0))
-                    combined_label = label
-                else:
-                    combined_img.paste(img, (28 * i, 0))
-                    combined_label = 10 * combined_label + label
-
-            # Convert combined image and label back to tensor
-            combined_img = transforms.ToTensor()(combined_img).to(device)
-            combined_label = torch.tensor(combined_label, dtype=torch.long).to(device)
-
-            tuples.append((combined_img, combined_label))
-
-        os.makedirs(os.path.dirname(train_dataset_path), exist_ok=True)
-        print(f"{n} digits {train_dataset_type} dataset created. Saving dataset to {train_dataset_path}")
-        torch.save(tuples, train_dataset_path)
-        print("Loading the dataset")
-        n_digits_train_dataset = DataLoader(tuples, batch_size=batch_size, shuffle=True)
-
-    test_dataset_type = 'test'
-    test_dataset_path = os.path.join(custom_data_path, f'{n}_digits_dataset_{test_dataset_type}.pt')
-    # if n digits dataset already exists, load it
-    if os.path.exists(test_dataset_path):
-        print(f"Loading the {n} digits {test_dataset_type} dataset")
-        n_digits_test_dataset = DataLoader(torch.load(test_dataset_path, map_location='cpu'), batch_size=batch_size, shuffle=True)
-    else:
-        # if n digits dataset does not exist, create it
-        tuples = []
-        mnist_test_dataset = get_MNIST_data(train=False, data_loading=False)
-        print(f"Creating the {n} digits {test_dataset_type} dataset")
-
-        for idx in range(len(mnist_test_dataset)):
-            # Get n consecutive images (wrapping around at the end)
-            for i in range(n):
-                img, label = mnist_test_dataset[(idx + i) % len(mnist_test_dataset)]
-                img = transforms.ToPILImage()(img)
-                # Combine images side by side
-                if i == 0:
-                    combined_img = Image.new('L', (28 * n, 28))
-                    combined_img.paste(img, (0, 0))
-                    combined_label = label
-                else:
-                    combined_img.paste(img, (28 * i, 0))
-                    combined_label = 10 * combined_label + label
-
-            # Convert combined image and label back to tensor
-            combined_img = transforms.ToTensor()(combined_img).to(device)
-            combined_label = torch.tensor(combined_label, dtype=torch.long).to(device)
-
-            tuples.append((combined_img, combined_label))
-
-        os.makedirs(os.path.dirname(test_dataset_path), exist_ok=True)
-        print(f"{n} digits {test_dataset_type} dataset created. Saving dataset to {test_dataset_path}")
-        torch.save(tuples, test_dataset_path)
-        print("Loading the dataset")
-        n_digits_test_dataset = DataLoader(tuples, batch_size=batch_size, shuffle=True)
-
-    return n_digits_train_dataset, n_digits_test_dataset
-
-
-def get_n_digits_train_test_validation_dataset_clean(n: int, augment_data=False, scale_data_linearly=False, device=get_system_device()):
-    # check edge cases for n_digits_dataset
-    check_bounds_for_n_digits_dataset(n)
-    if n == 1:
-        return get_MNIST_train_test_data(data_loading=True)
 
     train_dataset_path = os.path.join(custom_data_path, f'{n}_digits_dataset_train.pt')
     test_dataset_path = os.path.join(custom_data_path, f'{n}_digits_dataset_test.pt')
     validation_dataset_path = os.path.join(custom_data_path, f'{n}_digits_dataset_validation.pt')
 
-    # if n digits train dataset already exists, load it
-    if os.path.exists(train_dataset_path):
-        print(f"Loading the {n} digits train dataset")
-        n_digits_train_dataset = DataLoader(torch.load(train_dataset_path, map_location='cpu'), batch_size=batch_size,
-                                            shuffle=False)
+    # if n digits train and test datasets already exists, load it
+    if os.path.exists(train_dataset_path) and os.path.exists(test_dataset_path):
+        print(f"Loading the {n} digits train and test dataset")
+        n_digits_train_dataset = DataLoader(torch.load(train_dataset_path, map_location='cpu'), batch_size=batch_size, shuffle=True)
+        n_digits_test_dataset = DataLoader(torch.load(test_dataset_path, map_location='cpu'), batch_size=batch_size, shuffle=True)
     else:
-        train_dataset = create_n_digits_dataset(n, train=True, augment_data=augment_data, scale_data_linearly=scale_data_linearly, device=device)
-
+        # if n digits dataset does not exist, create it
+        n_digits_train_dataset, n_digits_test_dataset = create_n_digits_train_test_dataset(n, train_dataset_path, test_dataset_path,
+                                      augment_data=augment_data, scale_data_linearly=scale_data_linearly)
+    n_digits_validation_dataset = get_n_digits_dataset(n, train=False, augment_data=augment_data, scale_data_linearly=scale_data_linearly)
+    return n_digits_train_dataset, n_digits_validation_dataset, n_digits_test_dataset
 
 
 
@@ -251,8 +182,8 @@ def augment_data(dataset: DataLoader, image_upsizing=1, batch_size=batch_size, d
     for batch_images, batch_labels in dataset:
         for img, label in zip(batch_images, batch_labels):
             # TODO: add resizing and translation
-            #if image_upsizing > 1:
-                #img = transforms.Resize((28 * image_upsizing, 28 * image_upsizing))(img)
+            # if image_upsizing > 1:
+            # img = transforms.Resize((28 * image_upsizing, 28 * image_upsizing))(img)
 
             img = transforms.ToPILImage()(img)
             img = transforms.RandomRotation(20)(img)
@@ -263,7 +194,4 @@ def augment_data(dataset: DataLoader, image_upsizing=1, batch_size=batch_size, d
 
 
 if __name__ == '__main__':
-    single_digits_train = get_MNIST_data(train=True)
-    print(next(iter(single_digits_train))[0][0].shape)
-    two_digits_train = get_n_digits_dataset(train=True)
-    print(next(iter(two_digits_train))[0][0].shape)
+    pass

@@ -4,12 +4,18 @@ import torch
 from torch import Tensor
 import os
 
+from torch.utils.data import DataLoader
+
 from config import get_system_device, data_path, plot_path
 
 
 def plot_model_inference(model, test_datasets, n_rows=5, n_cols=10, device=get_system_device()):
     # Get a batch of images and labels from the dataset
-    images, labels = next(iter(test_datasets))
+    try:
+        images, labels = next(iter(test_datasets))
+    except StopIteration:
+        print("The DataLoader object is empty.")
+        return
 
     # Convert the tensor to numpy for visualization
     images_numpy = images.cpu().numpy()
@@ -35,10 +41,13 @@ def plot_model_inference(model, test_datasets, n_rows=5, n_cols=10, device=get_s
     plt.show()
 
 
-def plot_dataset(datasets: Tensor):
+def plot_dataset(datasets: DataLoader):
     # Get a batch of images and labels from the dataset
-    images, labels = next(iter(datasets))
-
+    try:
+        images, labels = next(iter(datasets))
+    except StopIteration:
+        print("The DataLoader object is empty.")
+        return
     # Convert the tensor to numpy for visualization
     images_numpy = images.cpu().numpy()
 

@@ -25,14 +25,12 @@ data_transforms = transforms.Compose([
 # TODO: find a strategy to stop training when the model is overfitting, and give the option to the user to choose. may be early stopping
 # TODO: add tensorboard to requirements.txt
 # TODO: add progress bars to reassure the user while training
-# TODO: add to logs more info (model parameters, validation loss, etc)
 # TODO: add in readme how datasets are created and stored
 # TODO: GUI?
 # TODO: DOCSTRINGS
 # TODO: split training functions
 # TODO: data augmentation
 # TODO: add tests
-# TODO: add checkpoint choosing by inference optimization
 # TODO: fix the parallelization of the model training
 # TODO: bring all params in config sistematically
 # TODO: yaml file for config

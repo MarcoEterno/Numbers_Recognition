@@ -16,7 +16,7 @@ training_parallelism = True  # if set to True, the training loop will be paralle
 fast_training = True #False if(torch.has_mps or torch.cuda.is_available()) else True  # if manually set to True, the neural network will lose a layer of depth, but will train faster
 
 #HYPERPARAMETERS
-batch_size = 256 if fast_training else 64 #
+batch_size = 64
 learning_rate = 0.001 if fast_training else 0.0001
 momentum = 0.9
 weight_decay = 0.0001
