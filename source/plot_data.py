@@ -10,6 +10,7 @@ from config import get_system_device, data_path, plot_path
 
 
 def plot_model_inference(model, test_datasets, n_rows=5, n_cols=10, device=get_system_device()):
+    model.eval() # set the model to evaluation mode
     # Get a batch of images and labels from the dataset
     try:
         images, labels = next(iter(test_datasets))

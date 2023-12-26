@@ -11,7 +11,7 @@ from torch.optim import Adam
 from matplotlib import pyplot as plt
 
 from config import get_system_device, checkpoints_path, custom_data_path
-from data_loader_old import get_n_digits_dataset
+from data_loader import get_n_digits_train_validation_test_dataset
 from plot_data import plot_model_inference
 from train import train_model, load_model
 from image_classifier import ImageClassifier
@@ -63,7 +63,7 @@ def evaluate_all_chepoints():
         print(f"Evaluating model for {n_digits_in_number_to_classify} digits")
 
         # Load datasets
-        test_datasets = get_n_digits_dataset(n=n_digits_in_number_to_classify, train=False)
+        _, __, test_datasets = get_n_digits_train_validation_test_dataset(n=n_digits_in_number_to_classify, augment_data=True, scale_data_linearly=True)
 
         # Create model
         clf = ImageClassifier(n_digits_to_recognize=n_digits_in_number_to_classify, optimizer=Adam,
@@ -76,7 +76,7 @@ def evaluate_all_chepoints():
 
                 # Test model
                 accuracy[epoch] = test_model_performance(clf, test_datasets)
-                print(f"Accuracy for {n_digits_in_number_to_classify} digits at epoch {epoch}: {accuracy[epoch]}")
+                #print(f"Accuracy for {n_digits_in_number_to_classify} digits at epoch {epoch}: {accuracy[epoch]}")
 
         # Plot accuracy
         plot_accuracy(accuracy, n_digits_in_number_to_classify)
@@ -86,12 +86,13 @@ def evaluate_all_chepoints():
 
         # Plotting inference from the best model
         clf, epoch = load_model(clf=clf, checkpoints_dir=checkpoints_path, start_epoch=best_model_epoch[n_digits_in_number_to_classify])
-        plot_model_inference(clf, get_n_digits_dataset(n=n_digits_in_number_to_classify, train=False))
+        plot_model_inference(clf, test_datasets)
 
 if __name__ == '__main__':
 
-    clf = ImageClassifier(n_digits_to_recognize=1, optimizer=Adam)
+    clf = ImageClassifier(n_digits_to_recognize=3, optimizer=Adam)
     explore_network_weights(clf)
+    #evaluate_all_chepoints()
 
 """
 Keep track of best models:
@@ -104,3 +105,4 @@ In fact, number should be generated:
 1. by shuffling the digits and not concatenating them
 2. by increasing the numbers of samples with increasing digits to classify.
 """
+

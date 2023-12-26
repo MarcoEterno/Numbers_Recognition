@@ -96,23 +96,25 @@ def generate_n_digits_from_dataset(n: int, dataset: Dataset, data_loading=True, 
     tuples = []
     # loop through the dataset and combine n images into a single image
     for idx in range(len(dataset)):
-        for i in range(n):
-            img, label = dataset[(idx+i) % len(dataset)]
-            img = transforms.ToPILImage()(img)
-            #combine the images side by side
-            if i == 0:
-                combined_img = Image.new('L', (img.width * n, img.height))
-                combined_img.paste(img, (0, 0))
-                combined_label = label
-            else:
-                combined_img.paste(img, (img.width * i, 0))
-                combined_label = combined_label * 10 + label
+        for m in range(n if scale_data_linearly else 1):
+            for i in range(n):
+                img, label = dataset[(idx + (i + n * i)*(m+1)) % len(dataset)] # you can cleverly demonstrate that with
+                # this rule, the same two digits can never appear in two different images, thus reducing overfitting
+                img = transforms.ToPILImage()(img)
+                #combine the images side by side
+                if i == 0:
+                    combined_img = Image.new('L', (img.width * n, img.height))
+                    combined_img.paste(img, (0, 0))
+                    combined_label = label
+                else:
+                    combined_img.paste(img, (img.width * i, 0))
+                    combined_label = combined_label * 10 + label
 
-        # convert images to tensor
-        combined_img = transforms.ToTensor()(combined_img).to(device)
-        combined_label = torch.tensor(combined_label, dtype=torch.long).to(device)
+            # convert images to tensor
+            combined_img = transforms.ToTensor()(combined_img).to(device)
+            combined_label = torch.tensor(combined_label, dtype=torch.long).to(device)
 
-        tuples.append((combined_img, combined_label))
+            tuples.append((combined_img, combined_label))
 
     if data_loading:
         return DataLoader(tuples, batch_size=batch_size, shuffle=True)
@@ -133,7 +135,6 @@ def generate_n_digits_from_dataset(n: int, dataset: Dataset, data_loading=True, 
     combined_labels = torch.stack(combined_labels)
     return combined_images, combined_labels
     """
-
 
 
 def get_n_digits_train_validation_test_dataset(n: int, augment_data=False, scale_data_linearly=False,
@@ -167,12 +168,13 @@ def get_n_digits_train_validation_test_dataset(n: int, augment_data=False, scale
         train_data, test_data = get_MNIST_train_test_data(data_loading=False)
         validation_data = get_MNIST_data(train=False, data_loading=False)
 
-        print(f"Creating the {n} digits train, validation and test datasets")
+        print(f"Creating the {n} digits train dataset from the MNIST train dataset. This might take a while")
         train_dataset = generate_n_digits_from_dataset(n, train_data, data_loading=False, augment_data=augment_data, scale_data_linearly=scale_data_linearly)
+        print(f"Created the {n} digits train dataset. Creating the {n} digits test and validation datasets")
         test_dataset = generate_n_digits_from_dataset(n, test_data, data_loading=False, augment_data=augment_data, scale_data_linearly=scale_data_linearly)
         validation_dataset = generate_n_digits_from_dataset(n, validation_data, data_loading=False, augment_data=augment_data, scale_data_linearly=scale_data_linearly)
 
-        print(f"Saving the {n} digits train, validation and test datasets to {custom_data_path}")
+        print(f"Created the {n} digits test and validation datasets. Saving the {n} digits train, validation and test datasets to {custom_data_path}")
         torch.save(train_dataset, train_dataset_path)
         torch.save(test_dataset, test_dataset_path)
         torch.save(validation_dataset, validation_dataset_path)
