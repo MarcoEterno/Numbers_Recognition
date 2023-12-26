@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision.transforms import transforms
 
-from source.data_loader import get_MNIST_data, check_bounds_for_n_digits_dataset, get_n_digits_dataset, augment_data, \
+from source.data_loader_old import get_MNIST_data, check_bounds_for_n_digits_dataset, get_n_digits_dataset, augment_data, \
     get_MNIST_train_test_data
 
 

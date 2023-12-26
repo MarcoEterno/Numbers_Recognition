@@ -2,7 +2,7 @@ import unittest
 from torch.utils.data import DataLoader, Dataset
 from torchvision import datasets
 from torchvision.transforms import ToTensor
-from source.data_loader_scratch import get_MNIST_data, train_test_split, get_MNIST_train_test_data, check_bounds_for_n_digits_dataset, generate_n_digits_from_dataset, get_n_digits_train_validation_test_dataset
+from source.data_loader import get_MNIST_data, train_test_split, get_MNIST_train_test_data, check_bounds_for_n_digits_dataset, generate_n_digits_from_dataset, get_n_digits_train_validation_test_dataset
 
 class DataLoaderScratchTest(unittest.TestCase):
     def test_get_MNIST_data(self):

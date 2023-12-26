@@ -2,7 +2,7 @@ from torch import nn
 from torch.optim import Adam
 
 from config import get_system_device, checkpoints_path
-from data_loader_scratch import get_n_digits_train_validation_test_dataset
+from data_loader import get_n_digits_train_validation_test_dataset
 from image_classifier import ImageClassifier
 from inference import test_model_performance
 from plot_data import plot_dataset

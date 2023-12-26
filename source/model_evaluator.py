@@ -11,7 +11,7 @@ from torch.optim import Adam
 from matplotlib import pyplot as plt
 
 from config import get_system_device, checkpoints_path, custom_data_path
-from data_loader import get_n_digits_dataset
+from data_loader_old import get_n_digits_dataset
 from plot_data import plot_model_inference
 from train import train_model, load_model
 from image_classifier import ImageClassifier
