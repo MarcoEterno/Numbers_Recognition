@@ -52,7 +52,7 @@ class ImageClassifier(nn.Module):
         print(f"Total number of parameters:  {total_params}")
 
     # model accuracy on 3 digits test dataset is:  0.965, epoch time = 18s, n_parameters = 274k
-    def initialize_fast_training_model(self):
+    def initialize_high_accuracy_model(self):
         self.model = nn.Sequential(
             nn.Conv2d(1, 32, 3, padding=1),
             nn.BatchNorm2d(32),
@@ -86,39 +86,39 @@ class ImageClassifier(nn.Module):
         )
 
 
-    ## model accuracy on test dataset is:  0.98828125, epoch time = 7s, n_parameters = 178k
-    # def initialize_fast_training_model(self):
-    #     self.model = nn.Sequential(
-    #         nn.Conv2d(1, 32, 3, padding=1),
-    #         nn.BatchNorm2d(32),
-    #         nn.ReLU(),
-    #         nn.MaxPool2d(kernel_size=2),
-    #         nn.Dropout(0.25),
-    #
-    #         nn.Conv2d(32, 64, 3, padding=1),
-    #         nn.BatchNorm2d(64),
-    #         nn.ReLU(),
-    #         nn.MaxPool2d(kernel_size=2),
-    #         nn.Dropout(0.25),
-    #
-    #         nn.Conv2d(64, 32, 3, padding=1),
-    #         nn.BatchNorm2d(32),
-    #         nn.ReLU(),
-    #         nn.MaxPool2d(kernel_size=2),
-    #         nn.Dropout(0.25),
-    #
-    #         nn.AdaptiveAvgPool2d((1, 1)),
-    #
-    #         nn.Flatten(),
-    #         nn.Linear(in_features=32,
-    #                   out_features=10 * self.numbers_to_recognize * 4),
-    #         nn.ReLU(),
-    #         nn.Linear(in_features=10 * self.numbers_to_recognize * 4,
-    #                   out_features=10 * self.numbers_to_recognize * 4),
-    #         nn.ReLU(),
-    #         # in_features = in_channels*dim_input // 4**(n_max_pooling_layers)
-    #         nn.Linear(in_features=10 * self.numbers_to_recognize * 4, out_features=10 ** self.numbers_to_recognize)
-    #     )
+    # model accuracy on test dataset is:  0.98828125, epoch time = 7s, n_parameters = 178k
+    def initialize_fast_training_model(self):
+        self.model = nn.Sequential(
+            nn.Conv2d(1, 16*self.numbers_to_recognize, 3, padding=1),
+            nn.BatchNorm2d(16*self.numbers_to_recognize),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2),
+            nn.Dropout(0.25),
+
+            nn.Conv2d(16*self.numbers_to_recognize, 32*self.numbers_to_recognize, 3, padding=1),
+            nn.BatchNorm2d(32*self.numbers_to_recognize),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2),
+            nn.Dropout(0.25),
+
+            nn.Conv2d(32*self.numbers_to_recognize, 64*self.numbers_to_recognize, 3, padding=1),
+            nn.BatchNorm2d(64*self.numbers_to_recognize),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2),
+            nn.Dropout(0.25),
+
+            nn.AdaptiveAvgPool2d((1, 1)),
+
+            nn.Flatten(),
+            nn.Linear(in_features=64*self.numbers_to_recognize,
+                      out_features=10 * self.numbers_to_recognize * 4),
+            nn.ReLU(),
+            nn.Linear(in_features=10 * self.numbers_to_recognize * 4,
+                      out_features=10 * self.numbers_to_recognize * 2),
+            nn.ReLU(),
+            # in_features = in_channels*dim_input // 4**(n_max_pooling_layers)
+            nn.Linear(in_features=10 * self.numbers_to_recognize * 2, out_features=10 ** self.numbers_to_recognize)
+        )
 
     # model accuracy on test dataset is:  0.9765625, epoch time = 7.154s, n_parameters = 42.7k
     # def initialize_fast_training_model(self):
@@ -150,36 +150,3 @@ class ImageClassifier(nn.Module):
     #         # in_features = in_channels*dim_input // 4**(n_max_pooling_layers)
     #         nn.Linear(in_features=10 * 2 * self.numbers_to_recognize, out_features=10 ** self.numbers_to_recognize)
     #     )
-
-
-
-    def initialize_high_accuracy_model(self):
-        print(
-            "High accuracy mode is not reccomended and only works for 3 digits. Please use fast training mode instead.")
-        self.model = nn.Sequential(
-            nn.Conv2d(1, 64, 3, padding=1),
-            nn.BatchNorm2d(64),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2),
-            nn.Dropout(0.25),
-
-            nn.Conv2d(64, 128, 3, padding=1),
-            nn.BatchNorm2d(128),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2),
-            nn.Dropout(0.25),
-
-            nn.Conv2d(128, 256, 3, padding=1),
-            nn.BatchNorm2d(256),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2),
-
-            nn.AdaptiveAvgPool2d((1, 1)),
-
-            nn.Flatten(),
-            nn.Linear(in_features=256,
-                      out_features=2*10 * self.numbers_to_recognize),
-            nn.ReLU(),
-            # in_features = in_channels*dim_input // 4**(n_max_pooling_layers)
-            nn.Linear(in_features=2*10 * self.numbers_to_recognize, out_features=10 ** self.numbers_to_recognize),
-        )
