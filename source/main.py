@@ -11,8 +11,8 @@ from train import train_model, load_model
 
 # Hyperparameters
 NUM_DIGITS = 2  # number of digits to classify
-start_epoch = 0  # if set to n, loads the model from checkpoint_{n}.pt. if checkpoint_{n}.pt does not exist, it will start training from the latest available checkpoint
-total_epochs_to_train = 41  # total number of epochs that we want to train for
+start_epoch = 25  # if set to n, loads the model from checkpoint_{n}.pt. if checkpoint_{n}.pt does not exist, it will start training from the latest available checkpoint
+total_epochs_to_train = 0  # total number of epochs that we want to train for
 save_checkpoint_every_n_epochs = 5  # save a checkpoint every n epochs
 
 # TODO: PROJECT NAME NON CAPS WITH -
