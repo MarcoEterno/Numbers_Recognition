@@ -4,7 +4,7 @@ import time
 import torch
 from torch.utils.tensorboard import SummaryWriter
 
-from source.config import get_system_device, checkpoints_path, logs_path
+from source.config import get_system_device, checkpoints_path, logs_path, fast_training
 from source.image_classifier import ImageClassifier
 
 
@@ -24,7 +24,8 @@ def load_model(clf: ImageClassifier, start_epoch=0, checkpoints_dir=checkpoints_
         # find the last checkpoint that we saved and load it
         for i in range(start_epoch, 0, -1):
             tentative_last_checkpoint_path = os.path.join(checkpoints_dir,
-                                                          f"{clf.numbers_to_recognize}_digit{'s' if clf.numbers_to_recognize != 1 else ''}_epoch_{i}.pt")
+                                                          f"{clf.numbers_to_recognize}_digit{'s' if clf.numbers_to_recognize != 1 else ''}"
+                                                          f"_epoch_{i}_{'fast' if fast_training else 'high_perf'}.pt")
             if os.path.exists(tentative_last_checkpoint_path):
                 print(f"Loading the model from : checkpoint_{i}.pt. ")
                 checkpoint = torch.load(tentative_last_checkpoint_path)
@@ -39,7 +40,8 @@ def load_model(clf: ImageClassifier, start_epoch=0, checkpoints_dir=checkpoints_
 
 def save_model(clf: ImageClassifier, epoch, checkpoints_dir=checkpoints_path):
     checkpoint_path = os.path.join(checkpoints_dir,
-                                   f"{clf.numbers_to_recognize}_digit{'s' if clf.numbers_to_recognize != 1 else ''}_epoch_{epoch}.pt")
+                                   f"{clf.numbers_to_recognize}_digit{'s' if clf.numbers_to_recognize != 1 else ''}"
+                                   f"_epoch_{epoch}_{'fast' if fast_training else 'high_perf'}.pt")
     torch.save(
         {
             'epoch': epoch,
@@ -50,13 +52,16 @@ def save_model(clf: ImageClassifier, epoch, checkpoints_dir=checkpoints_path):
         checkpoint_path
     )
 
-def decide_if_model_needs_saving(clf: ImageClassifier, epoch, save_checkpoint_every_n_epochs, save,checkpoints_dir=checkpoints_path):
+
+def decide_if_model_needs_saving(clf: ImageClassifier, epoch, save_checkpoint_every_n_epochs, save,
+                                 checkpoints_dir=checkpoints_path):
     return epoch % save_checkpoint_every_n_epochs
 
-def train_model(clf: ImageClassifier, training_dataloader, validation_dataloader, start_epoch=0, max_total_epochs=10, checkpoints_dir=checkpoints_path,
+
+def train_model(clf: ImageClassifier, training_dataloader, validation_dataloader, start_epoch=0, max_total_epochs=10,
+                checkpoints_dir=checkpoints_path,
                 device=get_system_device(), save_checkpoint_every_n_epochs=5):
-    # TODO: parallelize the training loop
-    # TODO: add validation
+    # TODO: parallelize the training loop for cpu only training
 
     if max_total_epochs == 0:
         print("No epochs to train for. Exiting training stage.")
@@ -102,7 +107,7 @@ def train_model(clf: ImageClassifier, training_dataloader, validation_dataloader
 
         train_accuracy = correct_predictions / total_predictions
 
-        #evaluate model on validation dataset
+        # evaluate model on validation dataset
         clf.eval()  # Set model to evaluation mode
         with torch.no_grad():
             total_val_predictions = 0
@@ -125,7 +130,7 @@ def train_model(clf: ImageClassifier, training_dataloader, validation_dataloader
             writer.add_scalar("Time", round((time.perf_counter_ns() - start_time) / 1e9, 3), epoch)
             writer.add_scalar("Learning rate", clf.optimizer.param_groups[0]['lr'], epoch)
         print(
-            f"Epoch: {epoch} - Train Accuracy: {round(train_accuracy,4)} - Validation Accuracy: {round(val_accuracy,4)}"
+            f"Epoch: {epoch} - Train Accuracy: {round(train_accuracy, 4)} - Validation Accuracy: {round(val_accuracy, 4)}"
             f" - Time: {round((time.perf_counter_ns() - start_time) / 1e9, 3)}s")
 
         clf.train()  # Set model back to training mode

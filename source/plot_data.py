@@ -10,6 +10,14 @@ from config import get_system_device, data_path, plot_path
 
 
 def plot_model_inference(model, test_datasets, n_rows=5, n_cols=10, device=get_system_device()):
+    """
+    Plots the model predictions on a sample of the test dataset
+    :param model: the model to use for inference
+    :param test_datasets: the test dataset
+    :param n_rows: the number of rows to display
+    :param n_cols: the number of columns to display
+    :param device: the device to use for inference
+    """
     model.eval() # set the model to evaluation mode
     # Get a batch of images and labels from the dataset
     try:
@@ -42,10 +50,14 @@ def plot_model_inference(model, test_datasets, n_rows=5, n_cols=10, device=get_s
     plt.show()
 
 
-def plot_dataset(datasets: DataLoader):
+def plot_dataset(dataset: DataLoader):
+    """
+    Plots a sample of the dataset, displaying the images and their labels
+    :param dataset: the dataset to plot
+    """
     # Get a batch of images and labels from the dataset
     try:
-        images, labels = next(iter(datasets))
+        images, labels = next(iter(dataset))
     except StopIteration:
         print("The DataLoader object is empty.")
         return

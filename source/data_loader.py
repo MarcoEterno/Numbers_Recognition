@@ -6,12 +6,15 @@ from torchvision import datasets
 from torchvision.transforms import ToTensor, transforms
 from PIL import Image
 
-from source.config import get_system_device, batch_size, data_path, custom_data_path
+from source.config import get_system_device, batch_size, data_path, custom_data_path, num_workers
 
 
 def get_MNIST_data(train=True, data_loading=True, print_info=True):
     """
     Loads the MNIST dataset
+    :param train: if True, loads the training dataset, otherwise loads the validation dataset
+    :param data_loading: if True, returns the dataset as a DataLoader object, otherwise returns it as a Dataset object
+    :param print_info: if True, prints information about the process being executed
     """
     if print_info:
         print(f"Loading the MNIST {'training' if train else 'validation'} dataset")
@@ -33,7 +36,9 @@ def train_test_split(dataset: Dataset, train_size=0.8, data_loading=True):
     Splits a dataset into a train and test dataset
     :param dataset: the dataset to split
     :param train_size: the size of the train dataset as a fraction of the original dataset
-    :param data_loading: if True, returns the train and test datasets as DataLoader objects, otherwise returns them as Dataset objects
+    :param data_loading: if True, returns the train and test datasets as DataLoader objects,
+    otherwise returns them as Dataset objects
+    :return: the train and test datasets
     """
     n_train_samples = int(len(dataset) * train_size)
     n_test_samples = len(dataset) - n_train_samples
@@ -67,6 +72,10 @@ def get_MNIST_train_test_data(train_size=0.8, data_loading=True, print_info=True
 
 
 def check_bounds_for_n_digits_dataset(n: int):
+    """
+    Checks that the input is a valid number of digits for the dataset
+    :param n: the number of digits to check
+    """
     if n < 1:
         raise ValueError("Expected number of digits for the dataset to create is greater than 1")
     if n > 9:
@@ -121,22 +130,6 @@ def generate_n_digits_from_dataset(n: int, dataset: Dataset, data_loading=True, 
     else:
         return tuples
 
-    """
-    # This code is cleaner but only works well for non augmented datasets
-    combined_images = []
-    combined_labels = []
-    for batch in iter(dataset):
-        batch_images, batch_labels = batch
-        combined_image = torch.cat(batch_images, dim=n).to(device)
-        combined_images.append(combined_image)
-        combined_label = 
-        combined_labels.append(batch_labels)
-    combined_images = torch.stack(combined_images)
-    combined_labels = torch.stack(combined_labels)
-    return combined_images, combined_labels
-    """
-
-
 def get_n_digits_train_validation_test_dataset(n: int, augment_data=False, scale_data_linearly=False,
                                                device=get_system_device()):
     """
@@ -159,9 +152,9 @@ def get_n_digits_train_validation_test_dataset(n: int, augment_data=False, scale
     if os.path.exists(train_dataset_path) and os.path.exists(test_dataset_path) and os.path.exists(
             validation_dataset_path):
         print(f"Loading the {n} digits train, validation and test datasets from {custom_data_path}")
-        train_dataset = DataLoader(torch.load(train_dataset_path, map_location='cpu'), batch_size=batch_size, shuffle=True)
-        validation_dataset = DataLoader(torch.load(validation_dataset_path, map_location='cpu'), batch_size=batch_size, shuffle=True)
-        test_dataset = DataLoader(torch.load(test_dataset_path, map_location='cpu'), batch_size=batch_size, shuffle=True)
+        train_dataset = DataLoader(torch.load(train_dataset_path, map_location='cpu'),num_workers=num_workers, batch_size=batch_size, shuffle=True)
+        validation_dataset = DataLoader(torch.load(validation_dataset_path, map_location='cpu'), num_workers=num_workers, batch_size=batch_size, shuffle=True)
+        test_dataset = DataLoader(torch.load(test_dataset_path, map_location='cpu'), num_workers=num_workers, batch_size=batch_size, shuffle=True)
         return train_dataset, validation_dataset, test_dataset
     else:
         # if the datasets do not exist, create them

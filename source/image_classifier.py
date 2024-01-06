@@ -15,10 +15,9 @@ class ImageClassifier(nn.Module):
         self.image_upsizing = image_upsizing
         self.model = None
         if n_digits_to_recognize > 4:
-            pass
-            # raise NotImplementedError(
-            # "Too many digits to recognize. This model can only recognize up to 4 digits. "
-            # "If you feel brave and want to set your machine on fire, remove this safety check and try again.")
+            raise NotImplementedError(
+            "Too many digits to recognize. This model can only recognize up to 4 digits. "
+            "If you feel brave and want to set your machine on fire, remove this safety check and try again.")
         if n_digits_to_recognize < 1:
             raise ValueError("Number of digits to recognize must be greater than 0.")
         if image_upsizing < 1:
@@ -26,7 +25,7 @@ class ImageClassifier(nn.Module):
         if fast_training:
             self.initialize_fast_training_model()
         else:
-            self.initialize_high_accuracy_model()
+            self.initialize_high_performance_model()
 
         if optimizer == Adam:
             self.optimizer = Adam(self.parameters(), lr=lr)
@@ -52,42 +51,44 @@ class ImageClassifier(nn.Module):
         print(f"Total number of parameters:  {total_params}")
 
     # model accuracy on 3 digits test dataset is:  0.965, epoch time = 18s, n_parameters = 274k
-    def initialize_high_accuracy_model(self):
+    def initialize_fast_training_model(self):
         self.model = nn.Sequential(
-            nn.Conv2d(1, 32, 3, padding=1),
-            nn.BatchNorm2d(32),
+            nn.Conv2d(1, 16 * self.numbers_to_recognize, 3, padding=1),
+            nn.BatchNorm2d(16 * self.numbers_to_recognize),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),
             nn.Dropout(0.25),
 
-            nn.Conv2d(32, 64, 3, padding=1),
-            nn.BatchNorm2d(64),
+            nn.Conv2d(16 * self.numbers_to_recognize, 32 * self.numbers_to_recognize, 3, padding=1),
+            nn.BatchNorm2d(32 * self.numbers_to_recognize),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),
             nn.Dropout(0.25),
 
-            nn.Conv2d(64, 128, 3, padding=1),
-            nn.BatchNorm2d(128),
+            nn.Conv2d(32 * self.numbers_to_recognize, 64 * self.numbers_to_recognize, 3, padding=1),
+            nn.BatchNorm2d(64 * self.numbers_to_recognize),
             nn.ReLU(),
-            #nn.MaxPool2d(kernel_size=2),
+            nn.MaxPool2d(kernel_size=2),
             nn.Dropout(0.25),
 
-            #The last pooling layer keeps only the spatial information of which digit a channel is referring to.
-            nn.AdaptiveAvgPool2d((1, self.numbers_to_recognize)),
+            nn.AdaptiveAvgPool2d((1, 1)),
+
             nn.Flatten(),
-            nn.Linear(in_features=128*self.numbers_to_recognize,
+            nn.Linear(in_features=64 * self.numbers_to_recognize,
                       out_features=10 * self.numbers_to_recognize * 4),
             nn.ReLU(),
             nn.Linear(in_features=10 * self.numbers_to_recognize * 4,
-                      out_features=10 * self.numbers_to_recognize * 4),
+                      out_features=10 * self.numbers_to_recognize * 2),
             nn.ReLU(),
             # in_features = in_channels*dim_input // 4**(n_max_pooling_layers)
-            nn.Linear(in_features=10 * self.numbers_to_recognize * 4, out_features=10 ** self.numbers_to_recognize)
+            nn.Linear(in_features=10 * self.numbers_to_recognize * 2, out_features=10 ** self.numbers_to_recognize)
         )
 
+    # model accuracy on 3 digits test dataset is:  0.98828125, epoch time = 7s, n_parameters = 178k
+    # model accuracy on 2 digits test dataset is:  0.98828125, epoch time = 7s, n_parameters = 178k
+    # model accuracy on 1 digit  test dataset is:  0.99609, epoch time = 7s, n_parameters = 30k
 
-    # model accuracy on test dataset is:  0.98828125, epoch time = 7s, n_parameters = 178k
-    def initialize_fast_training_model(self):
+    def initialize_high_performance_model(self):
         self.model = nn.Sequential(
             nn.Conv2d(1, 16*self.numbers_to_recognize, 3, padding=1),
             nn.BatchNorm2d(16*self.numbers_to_recognize),

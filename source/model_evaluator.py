@@ -10,7 +10,7 @@ from torch import nn
 from torch.optim import Adam
 from matplotlib import pyplot as plt
 
-from config import get_system_device, checkpoints_path, custom_data_path
+from config import get_system_device, checkpoints_path, custom_data_path, fast_training
 from data_loader import get_n_digits_train_validation_test_dataset
 from plot_data import plot_model_inference
 from train import train_model, load_model
@@ -18,10 +18,17 @@ from image_classifier import ImageClassifier
 from inference import test_model_performance
 from plot_data import plot_dataset
 
-max_number_of_epochs = 31
+max_number_of_epochs = 300
 device = get_system_device(print_info=True)
 
 def load_predifined_checkpoint(clf: ImageClassifier, predefined_checkpoints_path, epoch):
+    """
+    Loads a predefined checkpoint on the input model
+    :param clf: the model to load the checkpoint into
+    :param predefined_checkpoints_path: the path to the checkpoint
+    :param epoch: the epoch of the checkpoint
+    :return: the model with the checkpoint loaded
+    """
     checkpoint = torch.load(predefined_checkpoints_path)
     clf.load_state_dict(checkpoint['model_state_dict'])
     clf.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
@@ -29,6 +36,12 @@ def load_predifined_checkpoint(clf: ImageClassifier, predefined_checkpoints_path
     return clf
 
 def plot_accuracy(accuracy, n_digits_in_number_to_classify):
+    """
+    Plots the accuracy for each epoch
+    :param accuracy: a dictionary containing as key the epoch and as value the accuracy
+    :param n_digits_in_number_to_classify: the number of digits to classify
+
+    """
     plt.plot(accuracy.keys(), accuracy.values())
     plt.xlabel("Epoch")
     plt.ylabel("Accuracy")
@@ -37,6 +50,10 @@ def plot_accuracy(accuracy, n_digits_in_number_to_classify):
     plt.show()
 
 def explore_network_weights(clf: ImageClassifier):
+    """
+    Prints an overview of the network's weights
+    :param clf: the model to print the weights of
+    """
     total_params = 0
     for layer in clf.model:
         print(layer)
@@ -51,13 +68,15 @@ def explore_network_weights(clf: ImageClassifier):
             print(f"Number of parameters in layer {layer}: {n_params}")
             total_params += n_params
     print(f"Total number of parameters:  {total_params}")
-def evaluate_all_chepoints():
+def evaluate_all_chepoints(n_digits_of_interest = range(1, 5)):
     """
     This function evaluates all checkpoints for each number of digits to classify.
     It also plots the accuracy for each number of digits to classify.
-    :return:
+    :param range: the range of digits to classify we are interested with.
+    The range is inclusive on the left and exclusive on the right
+
     """
-    for n_digits_in_number_to_classify in range(2, 3):
+    for n_digits_in_number_to_classify in n_digits_of_interest:
         accuracy = defaultdict(list)
         best_model_epoch = defaultdict(int)
         print(f"Evaluating model for {n_digits_in_number_to_classify} digits")
@@ -71,28 +90,29 @@ def evaluate_all_chepoints():
 
         for epoch in range(0, max_number_of_epochs):
             # Load predefined checkpoint if available
-            if os.path.exists(os.path.join(checkpoints_path, f"{clf.numbers_to_recognize}_digit{'s' if clf.numbers_to_recognize != 1 else ''}_epoch_{epoch}.pt")):
+            if os.path.exists(os.path.join(checkpoints_path,
+                                           f"{clf.numbers_to_recognize}_digit{'s' if clf.numbers_to_recognize != 1 else ''}"
+                                           f"_epoch_{epoch}_{'fast' if fast_training else 'high_perf'}.pt")):
                 clf, epoch = load_model(clf=clf, checkpoints_dir=checkpoints_path, start_epoch=epoch)
 
                 # Test model
                 accuracy[epoch] = test_model_performance(clf, test_datasets)
-                #print(f"Accuracy for {n_digits_in_number_to_classify} digits at epoch {epoch}: {accuracy[epoch]}")
 
         # Plot accuracy
         plot_accuracy(accuracy, n_digits_in_number_to_classify)
         # Find best model
         best_model_epoch[n_digits_in_number_to_classify] = max(accuracy, key=accuracy.get)
-        print(f"Best accuracy for {n_digits_in_number_to_classify} digits: {max(accuracy.values())}, achieved at epoch {best_model_epoch[n_digits_in_number_to_classify]}")
+        print(f"Best accuracy for {n_digits_in_number_to_classify} digits: {max(accuracy.values())}, achieved at epoch {best_model_epoch[n_digits_in_number_to_classify]-1}")
 
         # Plotting inference from the best model
-        clf, epoch = load_model(clf=clf, checkpoints_dir=checkpoints_path, start_epoch=best_model_epoch[n_digits_in_number_to_classify])
+        clf, epoch = load_model(clf=clf, checkpoints_dir=checkpoints_path, start_epoch=best_model_epoch[n_digits_in_number_to_classify]-1)
         plot_model_inference(clf, test_datasets)
 
 if __name__ == '__main__':
 
-    clf = ImageClassifier(n_digits_to_recognize=3, optimizer=Adam)
-    explore_network_weights(clf)
-    #evaluate_all_chepoints()
+    clf = ImageClassifier(n_digits_to_recognize=4)
+    #explore_network_weights(clf)
+    evaluate_all_chepoints(range(4, 5))
 
 """
 Keep track of best models:
