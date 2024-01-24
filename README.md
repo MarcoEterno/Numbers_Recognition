@@ -67,7 +67,7 @@ tensorboard --logdir logs
 ```
 
 ## Model Architecture
-The model is a convolutional neural network, with 3 convolutional layers, 2 fully connected layers. 
+The model is a convolutional neural network, with 3 convolutional layers and 2 fully connected layers. 
 
 The model is designed to be able to recognize up to 4 digits, but can be easily extended to recognize more digits.
 
@@ -78,8 +78,11 @@ can be increased at will, since the model dimension would scale linearly with th
 ## Results
 
 Best accuracy for 1 digits: 0.9897, achieved at epoch 13
+
 Best accuracy for 2 digits: 0.9592, achieved at epoch 20
+
 Best accuracy for 3 digits: 0.9539, achieved at epoch 60
+
 Best accuracy for 4 digits: 0.9223, achieved at epoch 275
 
 ## Limitations
