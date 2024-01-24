@@ -67,12 +67,23 @@ tensorboard --logdir logs
 ```
 
 ## Model Architecture
+The model is a convolutional neural network, with 3 convolutional layers, 2 fully connected layers. 
 
+The model is designed to be able to recognize up to 4 digits, but can be easily extended to recognize more digits.
+
+The only bottleneck to model scaling is the number of parameters needed to construct the decoder of the neural network.
+If instead of 2 fully connected layers as decoder we use a hardcoded decoder, the numbers of digits the model can recognize 
+can be increased at will, since the model dimension would scale linearly with the number of digits to recognize.
 
 ## Results
 
+Best accuracy for 1 digits: 0.9897, achieved at epoch 13
+Best accuracy for 2 digits: 0.9592, achieved at epoch 20
+Best accuracy for 3 digits: 0.9539, achieved at epoch 60
+Best accuracy for 4 digits: 0.9223, achieved at epoch 275
+
 ## Limitations
 You should not try to train the model to recognize more than 4 digits. In fact, the bare minimum of parameters needed 
-to construct the decoder of the neural network is n*10^(n+1), where n is the number of digits to recognize. So for 5 digits,
+to construct the fully connected decoder of the neural network is n*10^(n+1), where n is the number of digits to recognize. So for 5 digits,
 you already exceed 5 million parameters.
 

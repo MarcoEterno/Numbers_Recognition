@@ -16,7 +16,7 @@ start_epoch = 0  # if set to n, loads the model from checkpoint_{n}.pt. if check
 total_epochs_to_train = 16  # total number of epochs that we want to train for
 save_checkpoint_every_n_epochs = 5  # save a checkpoint every n epochs
 
-# TODO: PROJECT NAME NON CAPS WITH -
+
 
 if __name__ == '__main__':
     device = get_system_device(print_info=True)

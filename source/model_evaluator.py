@@ -112,7 +112,7 @@ if __name__ == '__main__':
 
     clf = ImageClassifier(n_digits_to_recognize=4)
     #explore_network_weights(clf)
-    evaluate_all_chepoints(range(4, 5))
+    evaluate_all_chepoints(range(1, 5))
 
 """
 Keep track of best models:
