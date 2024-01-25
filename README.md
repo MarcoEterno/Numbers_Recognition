@@ -77,7 +77,7 @@ can be increased at will, since the model dimension would scale linearly with th
 
 ## Results
 
-Best accuracy for 1 digits: 0.9897, achieved at epoch 13
+Best accuracy for 1 digit: 0.9897, achieved at epoch 13
 
 Best accuracy for 2 digits: 0.9592, achieved at epoch 20
 
